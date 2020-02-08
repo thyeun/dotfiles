@@ -741,6 +741,8 @@ bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 20 # decrease
 
 # bar toggle, hide or show
 bindsym $mod+b bar mode toggle
+bindsym $mod+p exec --no-startup-id xdo hide -N "Polybar"
+bindsym $mod+shift+p exec --no-startup-id xdo show -N "Polybar"
 
 
 #####################################################################################################################

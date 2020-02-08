@@ -48,14 +48,14 @@ module-margin-left = 0
 module-margin-right = 1
 enable-ipc = true
 
-tray-detached = true
-tray-offset-x = 0
-tray-offset-y = -50
-tray-padding = 2
-tray-maxsize = 20
-tray-scale = 1.0
-tray-position = none
-tray-background = ${colors.black}
+;tray-detached = true
+;tray-offset-x = 0
+;tray-offset-y = -50
+;tray-padding = 2
+;tray-maxsize = 20
+;tray-scale = 1.0
+;tray-position = none
+;tray-background = ${colors.black}
 
 ;---------------------------------------
 ;		FONTS
@@ -69,7 +69,7 @@ font-1 = "Noto Sans:size=10;0"
 ;---------------------------------------
 
 modules-left = i3 xwindow 
-modules-right =  arch-aur-updates mail cpu memory date profile
+modules-right =  arch-aur-updates mail date profile
 modules-center = kernel 
 
 ;---------------------------------------
@@ -193,8 +193,7 @@ type = internal/xwindow
 format-foreground = ${colors.yellow}
 format-background = ${colors.black}
 format-padding = 5
-label = %title:0:100:...%
-font = font-1
+label = " %title:0:100:...% "
 
 ;---------------------------------------
 ;	   XBACKLIGHT
@@ -285,7 +284,7 @@ format-full-underline = ${colors.red1}
 [module/arch-aur-updates]
 type = custom/script
 exec = ~/.config/polybar/scripts/check-all-updates.sh
-interval = 1000
+interval = 100
 label = "  Updates: %output% "
 click-left = exec termite -e 'trizen -Syu'
 format-foreground = ${colors.black}
@@ -350,7 +349,7 @@ menu-0-4-exec =
 type = custom/script
 interval = 1
 ;format = <label>
-label = "  %output% "
+label = "   %output% "
 format-foreground = ${colors.black}
 format-background = ${colors.yellow}
 format-underline = ${colors.yellow1}
@@ -387,5 +386,5 @@ exec = echo "  "
 interval = 1
 click-left = exec mugshot
 format-foreground = ${colors.black}
-format-background = ${colors.blue}
-format-underline = ${colors.blue1}
+format-background = ${colors.green}
+format-underline = ${colors.green1}
