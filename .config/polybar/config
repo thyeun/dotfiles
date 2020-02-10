@@ -61,7 +61,7 @@ enable-ipc = true
 ;		FONTS
 ;---------------------------------------
 
-font-0 = "SauceCodePro Nerd Font:weight=bold:size=7;2"
+font-0 = "MesloLGS Nerd Font:weight=bold:size=5;2"
 font-1 = "Noto Sans:size=10;0"
 
 ;---------------------------------------
@@ -69,7 +69,7 @@ font-1 = "Noto Sans:size=10;0"
 ;---------------------------------------
 
 modules-left = i3 xwindow 
-modules-right =  arch-aur-updates mail date profile
+modules-right = arch-aur-updates mail date profile
 modules-center = kernel 
 
 ;---------------------------------------
@@ -349,7 +349,7 @@ menu-0-4-exec =
 type = custom/script
 interval = 1
 ;format = <label>
-label = "   %output% "
+label = "   %output% "
 format-foreground = ${colors.black}
 format-background = ${colors.yellow}
 format-underline = ${colors.yellow1}
