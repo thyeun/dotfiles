@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# author    niraj
-# github    niraj998
-
 # get workspace widget for eww
 workspaces() {
 
