@@ -1,0 +1,112 @@
+
+	
+<p>
+Finding interesting content on the internet can be like sifting your way through a pile of garbage to discover something useful. Social media can be fun and useful, but the amount of irrelevant content can be disheartening as your feed is curated by biased algorithms. </p>
+<p>
+RSS, or <a href="https://en.wikipedia.org/wiki/RSS">Real Simple Syndication</a>, is a standardised method to subscribe to websites. An RSS feed is a file on a web server that lists the recent articles of that site. Some websites have more than one feed, so that readers can subscribe to specific topics. For example, the RSS feed for Emacs articles on this website is <a href="https://lucidmanager.org/tags/emacs/index.xml"><a href="https://lucidmanager.org/tags/emacs/index.xml">https://lucidmanager.org/tags/emacs/index.xml</a></a>. RSS feeds are also commonly used to distribute podcasts and YouTube subscriptions.</p>
+<p>
+<a href="https://www.technewsworld.com/story/86699.html">RSS is a civilised way to consume content</a> because you only get to see those blogs or podcasts that you subscribe to. When you use RSS, there is no algorithm that decides what you can and cannot see. Subscribing to RSS feeds is anonymous, so you will not be spammed with e-mail funnels trying to sell you stuff or services when you subscribe to a website.</p>
+<p>
+Many websites provide a link to their RSS feed. Some websites have an RSS feed without even knowing it because WordPress enables them by default. In WordPress websites, you can find the feed by adding <code class="verbatim">feed</code> at the end of the URL. Other websites might use <code class="verbatim">index.html</code> to share the feed.</p>
+<p>
+You will need an aggregator to read the content. Unfortunately, RSS is slowly being removed from most browsers because people rely on social media. There are, however, still many websites that use RSS syndication as their main subscription vehicle and the Elfeed package in Emacs provides a powerful interface with your curated interests.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/elfeed.jpg" alt="/images/emacs/elfeed.jpg" title="/images/emacs/elfeed.jpg" /><figcaption>
+Elfeed screendump.
+</figcaption>
+</figure>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Configuring Elfeed
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p><a href="https://github.com/skeeto/elfeed">Elfeed</a> is an Emacs package that makes it easy to manage and read your RSS feeds. You can add the feeds for your favourite websites and categorise them with tags. The Elfeed browser helps you to navigate through your collection of unread articles or podcasts.</p>
+<p>
+The code below deploys the <code class="verbatim">use-package</code> method to install the software when required and moves the database of posts to the configuration folder. You will  need to install the <code class="verbatim">use-package</code> package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<p>
+The middle line sets location of the downloaded content to your Emacs configuration folder. The default location for the Elfeed database is in your home folder, but I like to keep my Emacs configurations in one location. You can remove this line or use a different folder name. The second line in the <code class="verbatim">setq</code> expression opens posts in a separate window. The last line sets the keyboard shortcut to start Elfeed.</p>
+<p>
+You will also need to install use-package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Configure Elfeed</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">elfeed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:ensure</span> <span style="color:#036;font-weight:bold">t</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">elfeed-db-directory</span> (<span style="color:#06b;font-weight:bold">expand-file-name</span> <span style="background-color:#fff0f0">&#34;elfeed&#34;</span> <span style="color:#963">user-emacs-directory</span>)
+</span></span><span style="display:flex;"><span>          <span style="color:#963">elfeed-show-entry-switch</span> <span style="color:#a60;background-color:#fff0f0">&#39;display-buffer</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span>
+</span></span><span style="display:flex;"><span>    (<span style="background-color:#fff0f0">&#34;C-x w&#34;</span> <span style="color:#333">.</span> <span style="color:#963">elfeed</span> ))</span></span></code></pre></div>
+</div>
+<div id="outline-container-headline-2" class="outline-3">
+<h3 id="headline-2">
+Adding RSS Feeds
+</h3>
+<div id="outline-text-headline-2" class="outline-text-3">
+<p>Normally, the basic configuration would also include a list of RSS feeds by setting the <code class="verbatim">elfeed-feeds</code> variable. There is, however, a more convenient way to manage your collection of RSS feeds. The <a href="https://github.com/remyhonig/elfeed-org">elfeed-org</a> package lets you configure your list of favourite website in an Org Mode file.</p>
+<p>
+The package reads the nominated Org Mode file and looks for all internet addresses or links in the headers that have the <code class="verbatim">:elfeed:</code> tag. You can also attach other tags to any link in a headline so that you can organise your feed by topic.</p>
+<p>
+The example below shows how you can structure your Elfeed Org Mode file. Note that a tag applies to all headings at a lower level, so the <code class="verbatim">:elfeed:</code> tag applies also to the Emacs heading. You can copy and paste this example into an Org File to get started:</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span><span style="color:#000080;font-weight:bold">*</span><span style="font-weight:bold"> Blogs                                            </span><span style="font-style:italic"> :elfeed:</span>
+</span></span><span style="display:flex;"><span><span style="color:#800080;font-weight:bold">**</span> Emacs                                           <span style="font-style:italic"> :Emacs:</span>
+</span></span><span style="display:flex;"><span><span style="color:#800080;font-weight:bold">***</span> [[https://lucidmanager.org/tags/emacs/index.xml][More productive with Emacs]]
+</span></span><span style="display:flex;"><span><span style="color:#800080;font-weight:bold">***</span> [[http://www.reddit.com/r/emacs/.rss][Emacs on Reddit]]
+</span></span><span style="display:flex;"><span><span style="color:#800080;font-weight:bold">**</span> News                                             <span style="font-style:italic"> :news:</span>
+</span></span><span style="display:flex;"><span><span style="color:#800080;font-weight:bold">***</span> http://rss.cnn.com/rss/edition_world.rss</span></span></code></pre></div>
+</div>
+<p>
+The only configuration you need for <code class="verbatim">elfeed-org</code> is to set the name of the Org files you like to use. To add or remove a feed, simply edit this file, run Elfeed and update the feed list. You can also add comments as anything that is not in a header is ignored. Simply change the <code class="verbatim">&#34;elfeed.org&#34;</code> in the configuration below or add additional files after it.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Configure Elfeed with org mode</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">elfeed-org</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:ensure</span> <span style="color:#036;font-weight:bold">t</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">elfeed-org</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">rmh-elfeed-org-files</span> (<span style="color:#06b;font-weight:bold">list</span> <span style="background-color:#fff0f0">&#34;elfeed.org&#34;</span>)))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Using Elfeed
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>You are now ready to ready your RSS feeds. Press <code class="verbatim">C-x w</code> to start the Elfeed browser. The browser shows a list with the date and title of each entry, the name of the feed and tags. When you hit enter, Elfeed displays the text of the entry. You can use the following keystrokes to manage your feed:</p>
+<ul>
+<li><code class="verbatim">b</code>: Open the article in the browser</li>
+<li><code class="verbatim">G</code>: Fetch feed updates from the servers</li>
+<li><code class="verbatim">s</code>: Update the search filter</li>
+<li><code class="verbatim">c</code>: Clear the search filter</li>
+<li><code class="verbatim">r</code> Mark the entry as read</li>
+<li><code class="verbatim">u</code>: Mark the entry as unread</li>
+<li><code class="verbatim">g</code>: Refresh view of the feed listing (remove unread items)</li>
+<li><code class="verbatim">q</code>: Quit the browser</li>
+</ul>
+<p>All new entries are tagged as unread by default. The other tags are derived from your list of RSS feeds. Elfeed has a powerful search filter that you can use to filter by tag, feed name and dates. The filter can process Regex queries. The <a href="https://github.com/skeeto/elfeed/">Elfeed manual</a> describes the functionality in detail.</p>
+<p>
+One final note. When you remove a feed from your list, all articles that you previously downloaded will remain in the database and will show on your list until they are marked as read.</p>
+<p>
+All the configuration explained in this series of articles is available as an init file on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences of how to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

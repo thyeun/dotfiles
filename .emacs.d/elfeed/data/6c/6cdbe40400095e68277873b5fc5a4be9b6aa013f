@@ -1,0 +1,136 @@
+
+	
+<p>
+Music is a great tool to boost your productivity. Playing some soothing Bach, or some screeching heavy metal. Scientists have studied the <a href="https://www.frontiersin.org/articles/10.3389/fnagi.2014.00284/full">psychological effect of background music</a> and found that it can improve episodic memory, intelligence and verbal, as well as visual processing speeds.</p>
+<p>
+Emacs might be known as a text editor, but you can also play background music while you write. Emacs has several packages, such as <a href="https://github.com/dbrock/bongo">Bongo</a> and <a href="https://www.gnu.org/software/emms/">EMMS</a>, that can manage your collection and play sound files. You might already have a great music player on your computer, but not having to switch applications to play music helps to retain your focus. </p>
+<p>
+EMMS, the <em>Emacs Multi-Media System</em>, is the most comprehensive music player for Emacs. It contains an intuitive browser that can show album covers and metadata. Although EMMS has an <a href="http://www.gnu.org/software/emms/manual/">extensive manual</a>, like many other Emacs packages, the text is a bit opaque for those not familiar with Emacs Lisp editing. This article explains how to configure EMMS to convert your Emacs system into your personal jukebox.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Basic Installation
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>EMMS does not work out of the box when you install it via GNU ELPA. You will need some configuration and install some additional software. The minimum configuration for your <a href="https://lucidmanager.org/productivity/configure-emacs/">init file</a> consists of four lines:</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; EMMS basic configuration</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">require</span> <span style="color:#a60;background-color:#fff0f0">&#39;emms-setup</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">emms-all</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">emms-default-players</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">emms-source-file-default-directory</span> <span style="background-color:#fff0f0">&#34;~/Music/&#34;</span>) <span style="color:#888">;; Change to your music folder</span></span></span></code></pre></div>
+</div>
+<p>
+These lines initiate EMMS with all its functionality and provides access to default music players. The third line tells EMMS where you keep your music collection, which you obviously can change to your liking.</p>
+<p>
+This setup is, however, not enough to fully enjoy your music. EMMS needs access to a music player to create sound and access to metadata software to show artists, titles, cover images and so on.</p>
+<p>
+Once these external functions are enabled, EMMS lets you browse your collection and playlists and play the music by sending instructions to a music player, all within the comfort of your Emacs session.</p>
+<p>
+To play sounds with Emacs, you need to install one of the compatible sound players such as ogg123, mpg321, mplayer, mpv and vlc. You need to install at least one of these music players to hear sound.</p>
+<p>
+The last step to start playing music is to cache the music files. Run <code class="verbatim">M-x emms-add-directory-tree</code> to scan your collection. EMMS will create a cache folder in your Emacs config. This process might take a while, depending on the size of your collection. Wait till you see the message: </p>
+<blockquote>
+<p>EMMS: All track information loaded.</p>
+</blockquote>
+<p>
+You can start browsing and playing your music with the <code class="verbatim">emms-browser</code> function. The browser is an Emacs buffer that lists your music files. The music browser is an interface that lets you add music to the playlist. Start the browser and hit the <code class="verbatim">?</code> key to see the list of available commands.</p>
+<p>
+The basic principle is that you move tracks from the browser to the playlist. You can access the playlist by running the <code class="verbatim">emms</code> function.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Configure the EMMS browser
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>You can now use EMMS, but the interface is sparse with only file names to identify tracks. We need to add some additional functionality to enable the browser shown in the image below.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/emms-screen.jpg" alt="/images/emacs/emms-screen.jpg" title="Screenshot of the EMMS browser"/>
+<figcaption>
+Screenshot of the EMMS browser while writing this article.
+</figcaption>
+</figure>
+<div id="outline-container-headline-3" class="outline-3">
+<h3 id="headline-3">
+Reading metadata
+</h3>
+<div id="outline-text-headline-3" class="outline-text-3">
+<p>Emacs has no native code to extract <a href="https://en.wikipedia.org/wiki/ID3">meta data</a> (song name, artists and so on) within music files. To display this data, you need to install additional software outside of Emacs. EMMS can use various methods, including <a href="https://pypi.org/project/tinytag/">Tinytag</a> or <a href="https://exiftool.org/">Exiftool</a>. You will need to install either of these to show metadata and tell Emacs which one to use. Add one of the following lines to your configuration:</p>
+<p>
+Tinytag is a Python script, so you will need access to Python and install it with <code class="verbatim">pip install tinytag</code>. You can test that it works by calling:</p>
+<div class="src src-bash">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m tinytag ~/Music/Frank<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>Zappa/1969<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>Hot<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>Rats/02.<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>Willie<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>the<span style="color:#666;background-color:#fff0f0;font-weight:bold">\ </span>Pimp.mp3</span></span></code></pre></div>
+</div>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Choose one of these</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">emms-info-functions</span> <span style="color:#333">&#39;</span>(<span style="color:#963">emms-info-tinytag</span>))  <span style="color:#888">;; When using Tinytag</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;;(setq emms-info-functions &#39;(emms-info-exiftool)) When using Exiftool</span></span></span></code></pre></div>
+</div>
+<p>
+When EMMS comes across a track, it will try to extract the info by calling the program you stored in the <code class="verbatim">emms-info-functions</code> variable.</p>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+Album covers
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>The auxiliary programs that read meta data cannot access any CD covers embedded in the music files. The artwork for each album needs to be stored as a separate file within the folder for each album.</p>
+<p>
+EMMS uses the <a href="https://imagemagick.org/index.php">ImageMagick</a> library to generate the thumbnails. You thus need to install this package to enable viewing the covers.</p>
+<p>
+The <code class="verbatim">emms-browser-covers</code> variable controls the file names that the browser will look for. By default, EMMS looks for  <code class="verbatim">cover.jpg</code> file. The line below configures EMMS to automatically resize available images and stores the small versions in the cache in your Emacs configuration folder:</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Load cover images</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">emms-browser-covers</span> <span style="color:#a60;background-color:#fff0f0">&#39;emms-browser-cache-thumbnail-async</span>)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-2">
+<h2 id="headline-5">
+Play music with EMMS
+</h2>
+<div id="outline-text-headline-5" class="outline-text-2">
+<p>Phew, we can finally start enjoying the music collection. EMMS has many entry points to your collection. The browser is the most convenient way to select the music of your liking. You start the browser with <code class="verbatim">emms-browser</code>. Loading the browser for the first time in an Emacs session might take a while if your music collection is large.</p>
+<p>
+From the browser you can add music to the playlist with <code class="verbatim">C-j</code>. To play music and navigate the playlist with multimedia keys on your keyboard, which you need to configure.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span><span style="color:#888">;; Keyboard shortcuts</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#963">global-set-key</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;&lt;XF86AudioPrev&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;emms-previous</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#963">global-set-key</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;&lt;XF86AudioNext&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;emms-next</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#963">global-set-key</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;&lt;XF86AudioPlay&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;emms-pause</span>)</span></span></code></pre></div>
+</div>
+<p>
+You can extend EMMS with either the Ivy or Helm <a href="https://lucidmanager.org/productivity/emacs-completion-system/">completion system</a>. This configuration binds <code class="verbatim">C-F5</code> to the Helm browser. In the Helm browser you can incrementally search for album titles.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Helm EMMS</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">helm-emms</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span>
+</span></span><span style="display:flex;"><span>    ((<span style="background-color:#fff0f0">&#34;&lt;C-f5&gt;&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-emms</span>)))</span></span></code></pre></div>
+</div>
+<p>
+You can find the complete code for this Emacs configuration on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+This is only the start of using EMMS. The Emacs Multi-Media System has a plethora of further option you can use to fine-tune your listening experience. Read the EMMS manual for detailed information about the various options. If you have any tips or suggestions, please share them below.</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences of how to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

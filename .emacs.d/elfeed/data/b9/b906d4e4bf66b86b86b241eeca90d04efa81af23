@@ -1,0 +1,272 @@
+
+	
+<p>
+Writers need three resources: their imagination, their craft and the works of other writers. A common advice for authors to become better at what they do is to read more. Keeping track of all the books and articles you read can be a daunting task. Anyone who has completed a PhD dissertation understands the issues with processing hundreds of references.</p>
+<p>
+This article describes how to manage references and bibliographies with Emacs BibTeX mode and the <code class="verbatim">helm-bibtex</code> and <code class="verbatim">org-ref</code> packages. These packages also nicely integrate with the <a href="https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/">Org-Roam</a> note taking package.</p>
+<p>
+This software allows you to create and manage bibliographies and to read electronic documents and take notes, turning Emacs into a fully-featured bibliography management system.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Getting started with Emacs BibTeX mode
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>Emacs ships with <code class="verbatim">bibtex-mode</code> to create and manage bibliographies. This mode, as the name suggests, uses the <a href="http://www.bibtex.org/">BibTeX</a> file format as your literature database. BibTeX is a tool to manage literature and citations and is typically used for LaTeX typesetting. A typical entry for a book will look like this:</p>
+<pre class="example">
+@book{prevos_principles_2019,
+  title        = {Principles of Strategic Data Science},
+  author       = {Prevos, Peter},
+  year         = 2019,
+  publisher    = {Packt Publishing},
+  isbn         = {978-1-83898-529-5},
+  file         = {:/prevos-2019.pdf},
+  keywords     = {data science, strategy}
+}
+</pre>
+<p>
+Each entry starts with an <code class="verbatim">@</code>-sign and the entry type, followed by a curly brace and the citation key. The following lines contain the relevant data about this entry, in this case a book about <a href="https://lucidmanager.org/data-science/strategic-data-science/">strategic data science</a> that I wrote with Emacs. The entry closes with a curly brace.</p>
+<p>
+BibTeX can process different types of literature, such as articles and conference papers, each of which has its own field types. BibTeX ignores any field names that are not recognised, which provides opportunities to use the file for other purposes.</p>
+<p>
+BibTeX is a plain text file with the <code class="verbatim">.bib</code> extension. You can store one or more bibliography files in a central folder, so you can refer to them for all your projects. You can also store these files in your project folders.</p>
+<p>
+You don’t need to install any packages to get started. Just created an empty file with a <code class="verbatim">.bib</code> extension and Emacs will enable <code class="verbatim">bibtex-mode</code> when you open the file.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Adding New Entries
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>Emacs <code class="verbatim">bibtex-mode</code> uses templates to add new entries. To add a reference, use the <code class="verbatim">bibtex-entry</code> function (<code class="verbatim">C-c C-b</code>). Press tab to see the possible literature types and select one. Emacs also provides a shortcut for each type of literature. To see a list of possible entry types, use the <code class="verbatim">C-c C-e ?</code> keyboard shortcut.</p>
+<p>
+Each entry type has at least one compulsory field. Any optional template fields start with ’OPT’. For fields that start with ’ALT’, such as author or editor, you have to complete at least one.</p>
+<p>
+Jump from field to field with <code class="verbatim">J-j</code> and complete all required fields, and one of the ALT fields. When you’re done, press <code class="verbatim">C-c</code> twice (<code class="verbatim">bibtex-clean-entry</code>) to check the syntax, and remove empty fields. You can also use <code class="verbatim">bibtex-fill-entry</code> function (<code class="verbatim">C-c C-q</code>) to align the text. The table below summarises the most salient keyboard shortcuts and functions.</p>
+<figure>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="verbatim">C-c C-e a</code></td>
+<td><code class="verbatim">bibtex-article</code></td>
+<td>Add an article</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-c C-e b</code></td>
+<td><code class="verbatim">bibtex-book</code></td>
+<td>Add a book</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-c C-e ?</code></td>
+<td></td>
+<td>Show entry types and shortcuts</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-j</code></td>
+<td><code class="verbatim">bibtex-next-field</code></td>
+<td>Jump to next field</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-down</code></td>
+<td><code class="verbatim">bibtex-next-entry</code></td>
+<td>Jump to the next entry</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-up</code></td>
+<td><code class="verbatim">bibtex-previous-entry</code></td>
+<td>Jump to the previous entry</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-c C-c</code></td>
+<td><code class="verbatim">bibtex-clean-entry</code></td>
+<td>Clean the entry</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-c C-q</code></td>
+<td><code class="verbatim">bibtex-fill-entry</code></td>
+<td>Align the fields</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code class="verbatim">bibtex-reformat</code></td>
+<td>Reformat all entries inregion or buffer</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code class="verbatim">bibtex-sort-buffer</code></td>
+<td>Sort all entries in the buffer by their keys</td>
+</tr>
+</tbody>
+</table>
+<figcaption>
+Overview of keyboard shortcuts to add and edit entries.
+</figcaption>
+</figure>
+<p>
+This mode only provides manual methods to add new literature. The additional packages described below add functionality to extract bibliographic information from websites and through DOI or ISBN references.</p>
+<div id="outline-container-headline-3" class="outline-3">
+<h3 id="headline-3">
+Importing existing BibTeX files
+</h3>
+<div id="outline-text-headline-3" class="outline-text-3">
+<p>You can also link a graphical bibliographic database, such as <a href="https://www.zotero.org/">Zotero</a> to Emacs. You can export your library in Zotero, or parts thereof, as a BibTeX file. The Better <a href="https://retorque.re/zotero-better-bibtex/">BibTeX package</a> in Zotero can automate this process.</p>
+<p>
+Any existing bib file created with other software might not be fully compatible with <code class="verbatim">bibtex-mode</code> because some of the high-level features are unavailable in BibTeX mode. The <code class="verbatim">bibtex-convert-alien</code> function checks whether bibtex-mode can parse an ’alien’ BibTeX file. Files generated with Zotero do not seem to require this conversion step.</p>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+Fine-tuning BibTeX mode
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>BibTeX mode pretty much works out of the box, but you can fine-tune the variables. The first line in the code block below adds a Flyspell hook to assist with fixing spelling errors. Refer to the article about <a href="https://lucidmanager.org/productivity/emacs-for-distraction-free-writing/">writing prose with Emacs</a> to setup spell-checking.</p>
+<p>
+The next expression adds optional fields for keywords and files for each type of entry. These fields are important when we use the bib files for reading electronic documents and taking notes. This expression also instructs Emacs to align the equal signs for each entry when you press <code class="verbatim">C-q</code>. </p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Spell checking (requires the ispell software)</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">add-hook</span> <span style="color:#a60;background-color:#fff0f0">&#39;bibtex-mode-hook</span> <span style="color:#a60;background-color:#fff0f0">&#39;flyspell-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;; Change fields and format</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">bibtex-user-optional-fields</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#333">&#39;</span>((<span style="background-color:#fff0f0">&#34;keywords&#34;</span> <span style="background-color:#fff0f0">&#34;Keywords to describe the entry&#34;</span> <span style="background-color:#fff0f0">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>          (<span style="background-color:#fff0f0">&#34;file&#34;</span> <span style="background-color:#fff0f0">&#34;Link to document file.&#34;</span> <span style="background-color:#fff0f0">&#34;:&#34;</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#963">bibtex-align-at-equal-sign</span> <span style="color:#036;font-weight:bold">t</span>)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+BibTeX versus BibLaTeX
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>BibTeX is old software that was last updated in 1988 and has as such some limitations. The BibLaTeX dialect is a newer version. To change <code class="verbatim">bibtex-mode</code> to BibLaTeX, change the <code class="verbatim">bibtex-dialect</code> variable to ’biblatex’.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; BibLaTeX settings</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;; bibtex-mode</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">bibtex-dialect</span> <span style="color:#a60;background-color:#fff0f0">&#39;biblatex</span>)</span></span></code></pre></div>
+</div>
+<p>
+This ends the section about the built-in BibTeX-Mode. Jonathan Le Roux publishes a <a href="http://www.jonathanleroux.org/bibtex-mode.html#0511">comprehensive manual</a> on his website that explains some more functionality in more detail.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-2">
+<h2 id="headline-6">
+File locations
+</h2>
+<div id="outline-text-headline-6" class="outline-text-2">
+<p>Next we configure two custom variables that contain a list of the bibliography files available in the designated folder, the location of electronic documents and of any notes.</p>
+<p>
+These variables will be useful for the additional packages described below. You can, of course, use any folder name you see fit. The <code class="verbatim">(getenv &#34;HOME&#34;)</code> results in your home folder. Using a variable instead of a fixed location ensures that this variable works across operating systems.</p>
+<p>
+The regex code in the second line lists all the <code class="verbatim">.bib</code> files in the designated folder that start with a letter (to prevent backup files being listed).</p>
+<p>
+In your own system, you will need to change the folder names to your preferred locations.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">bib-files-directory</span> (<span style="color:#06b;font-weight:bold">directory-files</span>
+</span></span><span style="display:flex;"><span>                             (<span style="color:#06b;font-weight:bold">concat</span> (<span style="color:#963">getenv</span> <span style="background-color:#fff0f0">&#34;HOME&#34;</span>) <span style="background-color:#fff0f0">&#34;/Documents/bibliography&#34;</span>) <span style="color:#036;font-weight:bold">t</span>
+</span></span><span style="display:flex;"><span>                             <span style="background-color:#fff0f0">&#34;^[A-Z|a-z].+.bib$&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#963">pdf-files-directory</span> (<span style="color:#06b;font-weight:bold">concat</span> (<span style="color:#963">getenv</span> <span style="background-color:#fff0f0">&#34;HOME&#34;</span>) <span style="background-color:#fff0f0">&#34;/Documents/bibliography/&#34;</span>))</span></span></code></pre></div>
+</div>
+<p>
+These variables are used to configure further packages so we don&#39;t have to repeat code.</p>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-2">
+<h2 id="headline-7">
+Helm BibTeX to manage bibliographies, read documents and take notes
+</h2>
+<div id="outline-text-headline-7" class="outline-text-2">
+<p>Managing a large collection of literature, electronic files and associated notes is one thing, but if you can’t quickly find them then you might as well not have them at all.</p>
+<p>
+The Helm <a href="https://lucidmanager.org/productivity/emacs-completion-system/">completion system</a> provides a useful window to your bibliographies. The Helm BibTeX menu lets you search entries and act on the results. The <code class="verbatim">C-z</code> key provides a menu for further actions, such as viewing pdf files or adding and editing notes.</p>
+<p>
+Emacs will open any associated PDF files. When you select to take notes, Emacs will create a separate Org mode file for the selected reference. When you also use <a href="https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/">Org-Roam for taking notes in Emacs</a>, then you have a complete research management system that creates hyperlinked and tagged bibliographical notes.</p>
+<p>
+The setup below provides a minimal configuration that uses the folder names defined above. Use <code class="verbatim">C-c n B</code> to start Helm BibTeX. You will also need to install use-package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">helm-bibtex</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">bibtex-completion-bibliography</span> <span style="color:#963">bib-files-directory</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">bibtex-completion-library-path</span> <span style="color:#963">pdf-files-directory</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">bibtex-completion-pdf-field</span> <span style="background-color:#fff0f0">&#34;File&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">bibtex-completion-notes-path</span> <span style="color:#963">org-directory</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">bibtex-completion-additional-search-fields</span> <span style="color:#333">&#39;</span>(<span style="color:#963">keywords</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span>
+</span></span><span style="display:flex;"><span>    ((<span style="background-color:#fff0f0">&#34;C-c n B&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-bibtex</span>)))</span></span></code></pre></div>
+</div>
+<p>
+The paths in the <code class="verbatim">file</code> field in a BibTeX file can contain one or more filenames, separated by a semi-colon. When you start the filename with a colon, you can use a relative path, e.g.: <code class="verbatim">file = {:/path/to/article.pdf}</code> is the same as <code class="verbatim">~/Documents/bibliography/pdf/path/to/article.pdf</code>, i.e. the colon symbol stands for the content of the <code class="verbatim">pdf-files-directory</code> variable we defined in the previous section.</p>
+<p>
+The <code class="verbatim">bibtex-completion-additional-search-fields</code> includes the keyword as a search field, which makes it a bit easier to find stuff.</p>
+<p>
+The first time you start Helm BibTeX might take a few seconds as it parses all entries in the collection of files, depending on the size of your bibliography. Just like all Helm applications, the interface uses incremental search, so just start typing and the bibliography will narrow. </p>
+<p>
+The <a href="https://github.com/tmalsburg/helm-bibtex">helm-bibtex website</a> provides detailed information about further functionality.</p>
+</div>
+</div>
+<div id="outline-container-headline-8" class="outline-2">
+<h2 id="headline-8">
+Bibliographic notes with Org-Roam
+</h2>
+<div id="outline-text-headline-8" class="outline-text-2">
+<p>The last part of this configuration connects your bibliography to the Org-Roam database. The Org-Roam BibTeX package allows you to create notes directly from your bibliography.</p>
+<p>
+Open your bibliography with <code class="verbatim">C-c n B</code>, select the relevant entry and hit <code class="verbatim">F8</code>. This will either open an existing note on this entry, or create a new note.</p>
+<p>
+The only difference between a regular note and a bibliographic one is that the properties drawer contains a citation link in the <code class="verbatim">ROAM_REFS</code> property, as shown in the example below.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span><span style="color:#888">:PROPERTIES:
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">:ID:       c037d9f7-1aad-4774-8f8e-d5974de23b8c
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">:ROAM_REFS: cite:harris_customer_2001
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888">:END:</span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#+title</span><span style="color:#888">: Customer participation in retail service: Lessons from Brecht</span></span></span></code></pre></div>
+</div>
+<p>
+You can view the associated PDF file from anywhere in the document with the <code class="verbatim">C-c n b</code> shortcut, which will open a menu with options.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">org-roam-bibtex</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:after</span> (<span style="color:#963">org-roam</span> <span style="color:#963">helm-bibtex</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span> (<span style="color:#007020">:map</span> <span style="color:#963">org-mode-map</span> (<span style="background-color:#fff0f0">&#34;C-c n b&#34;</span> <span style="color:#333">.</span> <span style="color:#963">orb-note-actions</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">require</span> <span style="color:#a60;background-color:#fff0f0">&#39;org-ref</span>))
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">org-roam-bibtex-mode</span>)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-2">
+<h2 id="headline-9">
+More Productive with Emacs
+</h2>
+<div id="outline-text-headline-9" class="outline-text-2">
+<p>The next article shows how to <a href="https://lucidmanager.org/productivity/publishing-with-org-mode-export/">publish articles and books</a> with Emacs and Org mode.</p>
+<p>
+You can download the complete configuration file from GitHub. This file is fully self-contains and will install and configure all required software when you evaluate the buffer.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences of how to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

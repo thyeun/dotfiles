@@ -1,0 +1,439 @@
+
+	
+<p>
+The world is full of distractions, especially when you are trying to focus on writing. Most writing software is full of icons and options to change the document’s design. Distraction-free writing tools remove distractions from the screen, so they become more like electronic typewriters that let the author focus on content over form. This article shows how to use Emacs for Distraction-Free writing, using the built-in Org mode package.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+What You See Is What You Mean
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>Before computers, writers used mechanical typewriters that had one font. Pictures had to be drawn or cut and pasted into the text. In the old approach, producing the content and crafting the final result were separate activities. The writer delivered the text, and the typesetter designed the book. Although mechanical typewriters have limited capabilities, they do have the advantage of keeping you focused on the text.</p>
+<p>
+Modern word processors use a <em>What You See is What You Get</em> (WYSIWYG) approach. This means that whatever you see on the screen is what your final printed or electronic product will look like to the reader. This certainly seems like a technological step forward, but it comes at a cost.</p>
+<p>
+The problem with the WYSIWYG approach is that it merges two different tasks into one. People who use modern word processes waste time formatting documents, which distracts them from producing content. Who hasn’t experienced the frustration with trying to get your Word Processor to display images where you want them?</p>
+<p>
+Emacs is a plain text editor. This means that what you see on the screen is not the way the end product will look. Text editors use a <em>What You See Is What You Mean</em> approach. As I am typing this text in Emacs, I only see the text. My screen does not look the same as what you are reading now. My background is dark, the font is different, and the only thing on the screen is this text, free from distractions. The coloured text indicates the function of the text, such as headlines and metadata.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/wysiwym.jpg" alt="The WYSIWYM approach with Emacs Org Mode and Hugo." title="The WYSIWYM approach with Emacs Org Mode and Hugo."/>
+<figcaption>
+The WYSIWYM approach: Left, I am writing this website in Emacs. Right: The exported result.
+</figcaption>
+</figure>
+<p>
+Text editors use markup languages to write text. This means that the words on the page are mixed with special characters to instruct the computer how to format a text when producing the final output. The most famous markup language is HTML, which drives the World Wide Web. $\LaTeX$ is another popular system to write and typeset books and articles, popular with scientists. Emacs includes major modes for almost any text format to write using the WYSIWYM approach.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Writing Modes
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>A major mode controls how a buffer behaves. A text file could be a movie script, a to-do list, the next great novel, computer code, or however you express your creativity. In commercial software, each of these files could be a different file type that you can only read in specialised software. In Emacs, text mode is for simple text files. Fountain mode helps you write movie or theatre scripts. Org mode excels at managing your to-do lists and creative writing. Many other modes with specialised functions are available in the package repositories.</p>
+<p>
+Each buffer can only have one major mode operating at a time, but it can have several minor modes. A minor mode provides optional extras, such as Flyspell for on-the-fly spell checking.</p>
+<p>
+Emacs has a primary text mode that you can use to write prose in plain text. Several specialised text modes, such as Markdown or Fountain mode, exist that include additional functionality. Org mode is arguably the most versatile major mode in Emacs. A large portion of these articles describe how to use this package. Org mode is so powerful that some people, like myself, started using Emacs just to be able to use this mode.</p>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Getting Started with Org mode
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>Org mode is a powerful major mode that comes with Emacs by default. This software was developed in 2003 by Carsten Dominik, professor of astronomy at the University of Amsterdam. Since then, others developers have enhanced the software, and it is currently maintained by Bastien Guerry.</p>
+<p>
+You can use Org mode to <a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">publish websites</a>, <a href="https://lucidmanager.org/productivity/publishing-with-org-mode-export/">articles and books</a>, keep a diary, <a href="https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/">keep research notes</a>, <a href="https://lucidmanager.org/productivity/getting-things-done-with-emacs/">manage your actions</a>, and much more. And on top of all that, it is intuitive to use. This section shows you the basics of writing prose in Org mode.</p>
+<p>
+To start an Org file, simply create a file with a <code class="verbatim">.org</code> extension and start writing, for example, <code class="verbatim">C-x C-f test.org &lt;Enter&gt;</code>.</p>
+<p>
+This screencast from Jake B. succinctly summarises the major options within Org mode.</p>
+<figure>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/hnMntOQjs7Q" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<figcaption>
+Emacs Org Mode Demo by Jake B.
+</figcaption>
+</figure>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+Document header
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>Each Org document starts with a header that contains metadata and settings relevant for the buffer. You need to at least provide a document title. The Org mode metadata and settings always start with <code class="verbatim">#+</code> followed by a keyword and a colon. The example below ads a title and startup variables explained below. The document header can also contain metadata such as a subtitle or a date. Emacs packages can use this information when exporting the text.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span>  #+title: Document Title
+</span></span><span style="display:flex;"><span>  #+startup: num indent inlineimages
+</span></span><span style="display:flex;"><span>  #+author: Nomen Nescio
+</span></span><span style="display:flex;"><span>  #+date: [2021-05-08 Sat]</span></span></code></pre></div>
+</div>
+<p>
+Your chosen Emacs theme will set the size and font for the metadata. The only purpose of these decorations is to help you navigate the document. The article about <a href="https://lucidmanager.org/productivity/publishing-with-org-mode-export/">publishing articles and books with Org mode</a> shows how to control the output format.</p>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+Document Structure
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>Books have chapters, sections and paragraphs, articles have headings, poems have verses and so on. Almost all forms of writing have a hierarchy. A good method to start writing is to first work out your hierarchical structure and then fill it with content. </p>
+<p>
+Org mode is essentially an outlining tool that helps you develop a document structure. To start a new header, simply write an asterisk as the first character, followed by a space. To create deeper levels, simply add more stars:</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">* </span>Heading 1
+</span></span><span style="display:flex;"><span>  ** Heading 2
+</span></span><span style="display:flex;"><span>  *** Heading 3</span></span></code></pre></div>
+</div>
+<p>
+When you press <code class="verbatim">M-enter</code>, the following line becomes a new heading. With <code class="verbatim">C-enter</code>, the following line is added after the text in the current section.</p>
+<p>
+Org mode makes it easy to move and promote or demote headings and associated text (which in Org mode is a subtree) with the <code class="verbatim">ALT</code> and arrow keys.</p>
+<p>
+You can collapse or expand a heading with the <code class="verbatim">TAB</code> key. Pressing <code class="verbatim">S-TAB</code> will collapse the whole document, showing only the level one headings. Pressing <code class="verbatim">S-TAB</code> once again will show the headings, and repeating it for a second time reveals the entire buffer.</p>
+<p>
+You can add numbers to the headers with the <code class="verbatim">num</code> option in the startup line in the header.</p>
+<ul>
+<li><code class="verbatim">TAB</code> / <code class="verbatim">S-TAB</code>: (un)fold headings</li>
+<li><code class="verbatim">M-up</code> / <code class="verbatim">M-down</code>: move a headline up or down</li>
+<li><code class="verbatim">M-left</code> / <code class="verbatim">M-right</code>: promote or demote a headline</li>
+<li><code class="verbatim">M-RET</code>: insert a new headline</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-3">
+<h3 id="headline-6">
+Rich Text
+</h3>
+<div id="outline-text-headline-6" class="outline-text-3">
+<p>To change how Org Mode displays text, you surround it with special characters: <code class="verbatim">/italic/, *bold*, _underline_, +striketrough+</code> and <code class="verbatim">=verbatim=</code>. You will see these markers in the Org mode text, but they will disappear when you export the buffer. If you like to remove the emphasis markers from your Org Mode buffer, then you can set this variable: <code class="verbatim">(setq org-hide-emphasis-markers t)</code>.</p>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-3">
+<h3 id="headline-7">
+Lists
+</h3>
+<div id="outline-text-headline-7" class="outline-text-3">
+<p>Writing lists in Org mode could not be easier. Simply start a line with a dash and complete the entry with <code class="verbatim">M-ENTER</code> to create the next entry. Using the <code class="verbatim">TAB</code> and left or right arrow keys changes the level of the item. You can change the list prefix with the <code class="verbatim">SHIFT</code> and left/right arrow keys.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">- </span>Item
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">+ </span>next item
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">1.</span> The following
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">2.</span> And another</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-8" class="outline-3">
+<h3 id="headline-8">
+Tables
+</h3>
+<div id="outline-text-headline-8" class="outline-text-3">
+<p>Writing tables in Org mode is very easy. Every cell is flanked by the pipe <code class="verbatim">|</code> symbol. You don&#39;t have to worry about aligning the text as the <code class="verbatim">TAB</code> key does that for you. When you start a line with <code class="verbatim">|-</code> and hit <code class="verbatim">TAB</code>, you create a horizontal line.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span><span style="background-color:#fff0f0">| Column 1 | Column 2 |</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">|----------+----------|</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">| Sator    |       12 |</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">| Arepo    |       26 |</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">| Tenet    |      878 |</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">| Opera    |       89 |</span>
+</span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">| Rotas    |       89 |</span></span></span></code></pre></div>
+</div>
+<p>
+You navigate forward through the cells with the <code class="verbatim">TAB</code> or arrow up/down keys. Using <code class="verbatim">s-TAB</code> moves you back one cell. Combining Alt and Shift with the arrow keys adds and removes columns and rows.</p>
+<p>
+Org mode has extensive capabilities to edit tables, including formulas.</p>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-3">
+<h3 id="headline-9">
+Images
+</h3>
+<div id="outline-text-headline-9" class="outline-text-3">
+<p>Although Emacs is a text editor, it can also <a href="https://lucidmanager.org/productivity/using-emacs-image-dired/">manage images</a>. In Org mode, an image is a link to an image file. You can preview the file in your buffer or export it to your preferred format. You can also add captions and set export properties for each image.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span>  #+caption: Image caption.
+</span></span><span style="display:flex;"><span>  #+attr_html: :alt Alternative text
+</span></span><span style="display:flex;"><span>  [[<span style="color:#00c">file:path/to/image</span>]]</span></span></code></pre></div>
+</div>
+<p>
+If you use the <a href="https://lucidmanager.org/productivity/emacs-completion-system/">Helm completion system</a>, you can preview the image as you select it with <code class="verbatim">helm-follow-mode</code>.  When you are in the Helm selection session, toggle follow mode with <code class="verbatim">C-c C-f</code>. As you move the cursor, images will appear in anoter window.</p>
+<p>
+To view the preview images in your document or remove the previews, you press <code class="verbatim">C-c C-x C-v</code>. You can also add <code class="verbatim">#+startup: inlineimages</code> to view images by default. </p>
+<p>
+To add an image, press <code class="verbatim">C-c C-l</code>, which opens the link menu. Org mode understands many types of links. We want the file type, so type <code class="verbatim">file:</code>.  Press enter and select the image filename in the mini buffer. You can skip the <code class="verbatim">file</code> part with the <code class="verbatim">C-u C-c C-l</code> shortcut (adding <code class="verbatim">C-u</code> before the standard shortcut.)</p>
+<p>
+After you enter the image, you preview it with the <code class="verbatim">org-redisplay-inline-images</code> function or <code class="verbatim">C-c C-x C-M-v</code>.</p>
+<p>
+You open a link in Org mode with a mouse click or by pressing <code class="verbatim">C-c C-o</code> with your cursor on the link text.</p>
+<p>
+The images in the buffer are all shown at the same width. The article about <a href="https://lucidmanager.org/productivity/publishing-with-org-mode-export/">writing articles and books with Emacs</a> and the article about <a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">creating websites with Emacs</a> explains how to control image with and other image properties.</p>
+<p>
+You can increase or decrease the size of an image with the <code class="verbatim">+</code> and <code class="verbatim">-</code> keys.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-10" class="outline-2">
+<h2 id="headline-10">
+Configure Text Modes and Org Mode
+</h2>
+<div id="outline-text-headline-10" class="outline-text-2">
+<p>Before we start writing, we need to optimise some text mode settings. You will also need to install the <code class="verbatim">use-package</code> package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>. Alternatively, download the <code class="verbatim">init.el</code> file from the GitHub page.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+The original purpose of Emacs is to develop computer code, so by default, the editor does not wrap lines at the end of the screen. While this might be great for developing software, it is a bit annoying when writing prose. The <code class="verbatim">visual-line-mode</code> function enables line-wrapping. You can run the function separately for each buffer, but ideally, you hook it to all text modes.</p>
+<p>
+When you select (mark) a section of text and start typing, Emacs will not replace the selected text. To enable Emacs deleting selected text, you set the <code class="verbatim">delete-selection-mode</code> variable, as below.</p>
+<p>
+One last sensible default is to enure that Emacs lets you use the page-up and page-down buttons to go to the first and last line in the buffer.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Sensible line breaking</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">add-hook</span> <span style="color:#a60;background-color:#fff0f0">&#39;text-mode-hook</span> <span style="color:#a60;background-color:#fff0f0">&#39;visual-line-mode</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;; Overwrite selected text</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">delete-selection-mode</span> <span style="color:#036;font-weight:bold">t</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;; Scroll to the first and last line of the buffer</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">scroll-error-top-bottom</span> <span style="color:#036;font-weight:bold">t</span>)</span></span></code></pre></div>
+</div>
+<p>
+The code snippet below sets some common keyboard shortcuts for creating links, viewing the agenda and capturing note, which are explained in other articles. You will also need to install use-package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Org-Mode initial setup</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">org</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span>
+</span></span><span style="display:flex;"><span>    ((<span style="background-color:#fff0f0">&#34;C-c l&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-store-link</span>)
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-c a&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-agenda</span>)
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-c c&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-capture</span>)))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-11" class="outline-2">
+<h2 id="headline-11">
+Editing Text
+</h2>
+<div id="outline-text-headline-11" class="outline-text-2">
+<p>Org mode provides the functionality to structure and shape your text. The functionality explained in the previous section only applies to Org files. The basic functionality of Emacs helps you to edit the text. This functionality is available in all editable buffers, irrespective of the major mode you use.</p>
+<div id="outline-container-headline-12" class="outline-3">
+<h3 id="headline-12">
+Selecting Text
+</h3>
+<div id="outline-text-headline-12" class="outline-text-3">
+<p>You can select text in almost all major modes, just like in most other software with the shift and arrow keys. Because the shift and arrow keys in Org mode are reserved for editing lists, you will need to use a more advanced way to select a block of text.</p>
+<p>
+To select a complete paragraph or subtree, use the <code class="verbatim">M-h</code> key. When the cursor is on a header, then this function selects the whole subtree under the heading. When on a paragraph, it selects that text. Repeatedly pressing <code class="verbatim">M-h</code> will select subsequent sections. Using <code class="verbatim">C-x h</code> will select all text in the buffer.</p>
+<p>
+For more fine-grained selection, you first need to set a mark with <code class="verbatim">C-space</code>. You then move to the end of the section to select your text, which is highlighted. </p>
+</div>
+</div>
+<div id="outline-container-headline-13" class="outline-3">
+<h3 id="headline-13">
+Copy and Paste
+</h3>
+<div id="outline-text-headline-13" class="outline-text-3">
+<p>Emacs has advanced copying and pasting functionality and packages that further extend this capability. In Emacs terminology, copying a text is the same as saving it onto the so-called kill-ring. The kill-ring is a buffer that keeps the history of all text that you copy, cut or delete. The kill-ring allows you to paste bits of text that you copied previously. Emacs keeps a long history of your text edits, which is erased when you exit the program.</p>
+<p>
+Note that selecting a slab of text and deleting it is the same as moving it to the kill ring, so nothing is actually deleted.</p>
+<p>
+Emacs does not use the shortcuts common in modern software. You can enable <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/CUA-Bindings.html">CUA mode</a> to use the <a href="https://en.wikipedia.org/wiki/IBM_Common_User_Access">Common User Access</a> (CUA), but the Emacs way is more versatile and worth learning. Use the following keyboard shortcuts to copy and move the text to and from the kill ring:</p>
+<figure>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="verbatim">M-w</code></td>
+<td>kill-ring-save</td>
+<td>Copy a selection to the kill ring</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-W</code></td>
+<td>kill-region</td>
+<td>Remove a text and save to the kill ring</td>
+</tr>
+<tr>
+<td><code class="verbatim">C-y</code></td>
+<td>yank</td>
+<td>Paste the most recent selection in the kill ring to the buffer</td>
+</tr>
+<tr>
+<td><code class="verbatim">M-y</code></td>
+<td>yank-pop</td>
+<td>Replace the previous pasted text with the next kill ring entry</td>
+</tr>
+</tbody>
+</table>
+<figcaption>
+Copying and pasting in Emacs.
+</figcaption>
+</figure>
+<p>
+In plain vanilla Emacs, the <code class="verbatim">M-y</code> command will cycle through the contents of the kill ring. When you use advanced <a href="https://lucidmanager.org/productivity/emacs-completion-system/">completion systems</a>, such as Helm, you see a list of all available previous selections. You use the arrow keys to pick what you like to paste into the active buffer. You can also search the relevant entry.</p>
+</div>
+</div>
+<div id="outline-container-headline-14" class="outline-3">
+<h3 id="headline-14">
+Search and Replace
+</h3>
+<div id="outline-text-headline-14" class="outline-text-3">
+<p>The most common search method in Emacs is incremental. An incremental search (<code class="verbatim">C-s</code>) begins searching as soon as you type the first character of the search string. As you type in the search term, Emacs shows you where the term is found. When you have typed enough characters to identify the place you want, you can terminate the search explicitly with RETURN or <code class="verbatim">C-g</code>. </p>
+<p>
+The <code class="verbatim">C-s</code> shortcut searches incrementally from the cursor. You cycle through the search results by repeatedly pressing <code class="verbatim">C-s</code>. Using <code class="verbatim">C-r</code> searches the text before the cursor.</p>
+<p>
+Emacs saves search terms in the search ring. Typing <code class="verbatim">C-s C-s</code> will show the previous search term. Using <code class="verbatim">C-p</code> and <code class="verbatim">C-n</code> lets you scroll through previous search terms.</p>
+<p>
+To search and replace text in a buffer use <code class="verbatim">M %</code> and follow the prompts in the mini buffer.</p>
+</div>
+</div>
+<div id="outline-container-headline-15" class="outline-3">
+<h3 id="headline-15">
+Undo mistakes
+</h3>
+<div id="outline-text-headline-15" class="outline-text-3">
+<p>To err is to be human and the undo function is every writer&#39;s gretaest ally. The undo key is mapped to <code class="verbatim">C-/</code>. If you need to undo the undo step, then use <code class="verbatim">C-g C-/</code>.</p>
+<p>
+Although each editing command usually makes a separate entry in the undo records, very simple commands (single keypresses) may be grouped together.</p>
+<p>
+If you repeat <code class="verbatim">C- /</code>, each repetition undoes another, earlier change, back to the limit of the undo information available. If all recorded changes have already been undone, the undo command displays an error message and does nothing.</p>
+</div>
+</div>
+<div id="outline-container-headline-16" class="outline-3">
+<h3 id="headline-16">
+Focusing
+</h3>
+<div id="outline-text-headline-16" class="outline-text-3">
+<p>It is easy to get lost in a sea of words on the screen, and some simple keystrokes can help you focus your eyes. Keying <code class="verbatim">C-l</code> (<code class="verbatim">recenter-top-bottom</code>) moves the line that your cursor is on to the centre of the screen.</p>
+<p>
+If you repeat this keystroke, then the cursor will move to the top of the screen. If you do this three times in a row, the cursor moves to the bottom of the screen.</p>
+</div>
+</div>
+<div id="outline-container-headline-17" class="outline-3">
+<h3 id="headline-17">
+Moving around
+</h3>
+<div id="outline-text-headline-17" class="outline-text-3">
+<p>Although Emacs has its own set of movement keys, you can comfortably use the arrow and page-up/down keys to move around a buffer.</p>
+<p>
+You will undoubtedly have the experience that you move from one part of a document to another and then like to jump back. In Emacs you can save the position of the cursor by pressing <code class="verbatim">C-space C-space</code>. When you are in another part of the document, jump back with <code class="verbatim">C-u C-space</code>.</p>
+</div>
+</div>
+<div id="outline-container-headline-18" class="outline-3">
+<h3 id="headline-18">
+Predictive Text
+</h3>
+<div id="outline-text-headline-18" class="outline-text-3">
+<p>Emacs has an extensive ecosystem of packages that implements predictive text, which is explained in a <a href="https://lucidmanager.org/productivity/emacs-completion-system/">separate article about completion</a>.</p>
+</div>
+</div>
+<div id="outline-container-headline-19" class="outline-3">
+<h3 id="headline-19">
+Checking Spelling
+</h3>
+<div id="outline-text-headline-19" class="outline-text-3">
+<p>The Emacs minor mode Flyspell provides an interface to the Hunspell spell checking software. To enable spell checking, you thus first need to ensure that Hunspell is available on your computer. Hunsell is easy to install on Linux computers, but is also available for <a href="https://lucidmanager.org/productivity/emacs-windows/">Windows</a> and <a href="https://lucidmanager.org/productivity/emacs-chromebook/">Chromebook</a>.</p>
+<p>
+The configuration below enables Flyspell for all text modes and sets Hunspell as the default checking program. The <code class="verbatim">M-F7</code> key checks the spelling for all words in the buffer and <code class="verbatim">F7</code> checks the word that you cursor is standing on.</p>
+<p>
+A more productive method is to use the <code class="verbatim">C-;</code> function. This function provides the most likely correction of the first spelling error before the cursor is. Emacs will show the list of possible corrections in the mini buffer. Repeatedly pressing <code class="verbatim">C-;</code> will cycle through the options until you get back to the original. This function prevents you from having to jump to your spelling mistakes.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Spell checking</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">;; Requires Hunspell</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">flyspell</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">ispell-program-name</span> <span style="background-color:#fff0f0">&#34;hunspell&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">ispell-default-dictionary</span> <span style="background-color:#fff0f0">&#34;en_AU&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:hook</span> (<span style="color:#963">text-mode</span> <span style="color:#333">.</span> <span style="color:#963">flyspell-mode</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span> ((<span style="background-color:#fff0f0">&#34;M-&lt;f7&gt;&#34;</span> <span style="color:#333">.</span> <span style="color:#963">flyspell-buffer</span>)
+</span></span><span style="display:flex;"><span>           (<span style="background-color:#fff0f0">&#34;&lt;f7&gt;&#34;</span> <span style="color:#333">.</span> <span style="color:#963">flyspell-word</span>)
+</span></span><span style="display:flex;"><span>           (<span style="background-color:#fff0f0">&#34;C-;&#34;</span> <span style="color:#333">.</span> <span style="color:#963">flyspell-auto-correct-previous-word</span>)))</span></span></code></pre></div>
+</div>
+<p>
+The available English dictionaries in Hunspell are:</p>
+<ul>
+<li><code class="verbatim">en_US</code> (American)</li>
+<li><code class="verbatim">en_CA</code> (Canadian)</li>
+<li><code class="verbatim">en_GB</code> (British)</li>
+<li><code class="verbatim">en_AU</code> (Australian)</li>
+</ul>
+<p>Hunspell supports a lot of other dictionaries so you can install and choose your own when English is not your first language. In Linux, you can install dictionaries with your favourite package manager.</p>
+<p>
+If you are multilingual, then you can set a different language for each buffer by adding a file variable. You need to the text below as the last lines in your Org mode file, where you replace <code class="verbatim">nederlands</code> (Dutch) with your preferred language:</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span>,# Local Variables:
+</span></span><span style="display:flex;"><span>,# ispell-local-dictionary: nederlands
+</span></span><span style="display:flex;"><span>,# End:</span></span></code></pre></div>
+</div>
+<p>
+Emacs evaluates this line and activates the dictionary when you run <code class="verbatim">M-x normal-mode</code> and the next time you open the file. This dictionary only applies to the relevant file and all other buffers remain in the default language.</p>
+</div>
+</div>
+<div id="outline-container-headline-20" class="outline-3">
+<h3 id="headline-20">
+Counting Words
+</h3>
+<div id="outline-text-headline-20" class="outline-text-3">
+<p>To count the words in a buffer, or part thereof, use the <code class="verbatim">count-word-region-function</code>, which is bound to <code class="verbatim">M-==</code>. The result appears in the minibuffer. When you select a portion of text, this function will count only the selection. Adding the <code class="verbatim">C-u</code> prefix counts the words for the hole buffer (<code class="verbatim">C-u M-=</code>).</p>
+</div>
+</div>
+<div id="outline-container-headline-21" class="outline-3">
+<h3 id="headline-21">
+Text size
+</h3>
+<div id="outline-text-headline-21" class="outline-text-3">
+<p>To increase the height of the text in the current buffer, type <code class="verbatim">C-x C-+</code>. To decrease it, type <code class="verbatim">C-x C--</code>.</p>
+<p>
+To restore the default (global) face height, type <code class="verbatim">C-x C-0</code>. These keys are all bound to the <code class="verbatim">text-scale-adjust</code> funcion, which looks at the last key typed to determine which action to take.</p>
+<p>
+Note that this text size is only for the ease of editing and not for the final output. The size of the text in any HTML, PDF or Word document is determined by the logic of the document (headers and so on), not individual size indicators.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-22" class="outline-2">
+<h2 id="headline-22">
+Emacs for Distraction-Free Writing
+</h2>
+<div id="outline-text-headline-22" class="outline-text-2">
+<p>This article only covered the tip of the iceberg of the writing and editing functionality in Emacs. Many specialised packages are available to enhance your writing experience. My advice is to keep it simple for now and spend your tie writing instead of configuring Emacs. When you discover a new need, a few Google searches will often give you exactly what you need.</p>
+<p>
+The screen still looks a bit bland, so in the next article we look at some techniques to improve the <a href="https://lucidmanager.org/productivity/ricing-org-mode/">look-and-feel or Emacs</a> and Org mode.</p>
+<p>
+All the configuration explained in this series of articles is available as an init file on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

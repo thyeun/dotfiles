@@ -1,0 +1,104 @@
+
+	
+<p>
+Emacs is a powerful text editor that lets you manage your life and be creative and productive with text. This focus on text does mean that Emacs cannot help you managing and editing images. This article shows how to view and manage images with Emacs using the image-dired package.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/image-dired.jpg" alt="Viewing images in Emacs (Photo of a street magician in Bangladesh)" title="Viewing images in Emacs (Photo of a street magician in Bangladesh)"/>
+<figcaption>
+Viewing images in Emacs (Photo of a street magician in Bangladesh).
+</figcaption>
+</figure>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Viewing Images
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>The image-dired package adds functionality to view and manage images from within a dired buffer. You can read the article on <a href="https://lucidmanager.org/productivity/manage-files-with-emacs/">managing files with Emacs</a> to learn the basic principles of dired. Both dired and image-dired are bundled with Emacs, so there is no need for configuration.</p>
+<p>
+You can view images from within a dired buffer by pressing enter which opens a window showing the image in full size. But it would be nicer if you could see thumbnails of all images. This is where image-dired comes in.</p>
+<p>
+In the dired buffer, select the images you like to view and activate image-dired with <code class="verbatim">C-t d</code>. A new buffer with thumbnails opens. You can move along the thumbnails with the arrow keys and select an image with <code class="verbatim">enter</code>. The <code class="verbatim">&lt;</code> and <code class="verbatim">&gt;</code> keys take you to the start or end of the thumbnails. Emacs stores the thumbnails in the <code class="verbatim">image-dired</code> folder in your configuration folder.</p>
+<p>
+When you hit enter, Emacs will open an image buffer to view a larger version. You can cycle through the images with the <code class="verbatim">space</code> and <code class="verbatim">backspace</code> buttons.</p>
+<p>
+Emacs scales images to the available space in the viewing window. The <code class="verbatim">+</code> and <code class="verbatim">-</code> key will zoom the image in or out and <code class="verbatim">f</code> shows it in full size. The letter <code class="verbatim">s</code> will zoom the image to fit the window. </p>
+<p>
+You can also show all images in a folder by entering <code class="verbatim">M-x image-dired</code> and select the directory you like to use. This function does not require you to select individual images.</p>
+<p>
+As usual, <code class="verbatim">q</code> quits the image window.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Tagging Images
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>The image-dired software can also create a database of images with searchable tags and thumbnail descriptions.</p>
+<p>
+You tag images directly from a dired buffer. The <code class="verbatim">C-t t</code> keystrokes lets you tag the selected files. You can retrieve the tags in a future session using <code class="verbatim">C-t f</code> and view the image thumbnails with <code class="verbatim">C-t d</code>, as described above. </p>
+<p>
+Retrieving tagged files only selects images with tags in the directory of the current dired buffer. It does not work across multiple folders. image-dired also does not track images that are renamed, moved or deleted.</p>
+<p>
+You can tag images from within a thumbnail buffer with the <code class="verbatim">t t</code> shortcut. You can also add a comment to the image by pressing <code class="verbatim">c</code> in the thumbnail viewer.</p>
+<p>
+The file name, tags and comments show in the mini buffer as you move through the image thumbnails: <code class="verbatim">directory: filename (tags): comment</code>.</p>
+<p>
+Emacs stores this metadata in the <code class="verbatim">image-dired</code> directory in your configuration folder in the <code class="verbatim">.image-dired_db</code> file. This is a plain text file that lists each file name and the tags an comment.</p>
+<p>
+You can also mark images for deletion with the <code class="verbatim">d</code> key. When you exit the thumbnail screen (<code class="verbatim">q</code>), you return to the dired buffer where you can execute the deletion with the <code class="verbatim">x</code> key.</p>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Editing Images
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>Emacs is a powerful piece of software but it is mostly limited to editing text. To meaningfully work with images, you will need another package. Image-dired lets you open images in external viewers or editors by setting one variable.</p>
+<p>
+Pressing <code class="verbatim">C-enter</code> will open the file in an external viewer or editor. You can tell Emacs which external viewer to user by configuring the <code class="verbatim">image-dired-external-viewer</code> variable. I linked it to the Gimp editing software. The content of this variable obviously depends on your system and preferred viewer.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Define external image viewer/editor</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">image-dired-external-viewer</span> <span style="background-color:#fff0f0">&#34;/usr/bin/gimp&#34;</span>)</span></span></code></pre></div>
+</div>
+<p>
+When you are in an image-dired buffer, you open the external viewer with <code class="verbatim">C-enter</code>. Confusingly, when you are in a normal dired buffer, this function is bound to <code class="verbatim">C-t x</code>. You can remap the keys to a shortcut of your liking.</p>
+<p>
+The lines of code below remaps the keys to open the external image viewer with <code class="verbatim">C-enter</code> and lets you activate image-dired with <code class="verbatim">C-t -C-d</code>. These lines of code instructs Emacs to configure the key bindings after dired is loaded in memory.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Image-dired Keyboard shortcuts</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">with-eval-after-load</span> <span style="color:#a60;background-color:#fff0f0">&#39;dired</span>
+</span></span><span style="display:flex;"><span>      (<span style="color:#06b;font-weight:bold">define-key</span> <span style="color:#963">dired-mode-map</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;C-t C-d&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;image-dired</span>)
+</span></span><span style="display:flex;"><span>      (<span style="color:#06b;font-weight:bold">define-key</span> <span style="color:#963">dired-mode-map</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;C-&lt;return&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;image-dired-dired-display-external</span>))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-2">
+<h2 id="headline-4">
+Using Images with Emacs and image-dired
+</h2>
+<div id="outline-text-headline-4" class="outline-text-2">
+<p>Image-dired is not a complete solution to manage your image collection, but it certainly provides some basic functionality. Other packages to work with images exist on the Emacs repositories, but also with limited functionality. </p>
+<p>
+All the configuration explained in this series of articles is available on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+<p>
+The next article shows how to your Emacs as an RSS reader to <a href="https://lucidmanager.org/productivity/read-rss-feeds-with-emacs-and-elfeed/">follow blogs with the Elfeed package</a>.</p>
+</div>
+</div>
+
+      

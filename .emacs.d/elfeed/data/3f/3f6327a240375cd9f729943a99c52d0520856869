@@ -1,0 +1,265 @@
+
+	
+<p>
+Taking notes is an important activity for all creative work. Recording your thoughts and ideas or somebody else’s ideas is a foundational activity whether you write scientific articles, novels or whatever else. Emacs Org mode has some useful functionality to take notes, which can be further extended with the <a href="https://www.orgroam.com/">Org-Roam package</a>. This article explains how to take notes in Emacs and configure the Org-roam note-taking system for Emacs.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<p>
+All the configuration explained in this series of articles is available as an init file on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Single File or Personal Wiki
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>Taking notes in Org mode can be as easy as maintaining one or more files with many headers. Org mode has some functionality to <a href="https://orgmode.org/guide/Tags.html">tag each heading</a> to help you categorise notes. </p>
+<p>
+While this is a great start, keeping topical notes in separate files is a more productive method because you can easily link Org mode files to each other, creating a personal Wiki. To create a hyperlink between two files, press <code class="verbatim">C-c C-l</code> and type <code class="verbatim">file:</code> (Or <code class="verbatim">C-u C-c C-l</code> to automatically choose file links). You can then select the file with your <a href="https://lucidmanager.org/productivity/emacs-completion-system/">completion system</a> and type a description, which creates a hyperlink. You follow these links by pressing <code class="verbatim">C-c C-o</code>.</p>
+<p>
+This method allows you to navigate from one file to the next, but Org mode does not know which other files link to your current buffer. There is no database in vanilla Emacs that allows you to review the structure of your linked files.</p>
+<p>
+The Org-Roam package extends the Org mode functionality by saving all the links between files and headings in a database. This method allows you to also view the backlinks. The database stores a list of nodes, which are files or registered headings. This additional functionality allows you to navigate through your network of notes like you would in a personal wiki.</p>
+<div id="outline-container-headline-2" class="outline-3">
+<h3 id="headline-2">
+Zettelkasten: Structured collection of notes
+</h3>
+<div id="outline-text-headline-2" class="outline-text-3">
+<p>Org-Roam implements the principles of the Zettelkasten method as a digital slip box full of cards. German sociologist Niklas Luhmann maintained a collection of tens of thousands notes, each written on an index card. These cards were linked through a series of keywords. This method allowed Luhmann to connect disparate ideas and writes his extensive oeuvre of books and articles.</p>
+<figure>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/rOSZOCoqOo8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<figcaption>
+Zettelkasten Note-Taking Method: Simply Explained.
+</figcaption>
+</figure>
+<p>
+The Org-Roam package in Emacs creates a network of links between your notes and manages your digital knowledge garden. Basically, the package extends Org mode functionality by storing all nodes (files and registered headings) in a database, including which between nodes. Furthermore, Org-roam provides each node in your knowledge network with a unique identifier consisting of a long string of numbers and letters, e.g. <code class="verbatim">711a7cac-e46b-4e64-b1e6-2940fa431e55</code>.</p>
+<p>
+The Org-Roam database provides excellent opportunities to analyse your network and discover patterns in your research that were perhaps previously invisible. You can examine this database and visualise its structure. The graph below is created with the <a href="https://lucidmanager.org/data-science/visualise-org-roam/">igraph package in R</a>.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/org-roam-network.png" alt="My personal Org-roam notes network" title="My personal Org-roam notes network" width="600"/>
+<figcaption>
+My personal Org-roam notes network.
+</figcaption>
+</figure>
+<p>
+The package provides a lot of freedom to structure your personal Wiki, and this article describes the basic functionality. However, before we can get started, we need to configure the system.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Configuring Org-roam
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+Install database
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>The Org-roam package stores a summary of all nodes in your network in a database. Org-Roam depends on the EmacSQL package to connect with the database. During package installation EmacSQL needs to compile a custom native binary for communicating with the SQLite database.</p>
+<p>
+To enable this task, you will need to install a compiler on your system. On GNU/Linux systems, including <a href="https://lucidmanager.org/productivity/emacs-chromebook/">Chromebook</a>, you need to instal the GCC compiler through your favourite package manager.</p>
+<p>
+On <a href="https://lucidmanager.org/productivity/emacs-windows/">Windows</a> you need to install Chocolatey. Open PowerShell as administrator and follow he instructions on the <a href="https://chocolatey.org/install">Chocolatey website</a>. After Chocolatey is available, you can install the compiler in Powershell as administrator with:</p>
+<div class="src src-bash">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>choco install mingw</span></span></code></pre></div>
+</div>
+<p>
+When Emacs configures the Org-Roam package, it will try to compile the database connector. This might take a little while, but is only done once.</p>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+Configure Org-Roam
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>The Org-roam package requires some configuration to get it to work. At a minimum, we need to activate the package, bind some keys, define the folder where your notes and database will live and set a template for new notes.</p>
+<p>
+You will also need to install the <code class="verbatim">use-package</code> package, which the <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a> article discusses. Alternatively, you can download the complete init file for this series of articles from GitHub and store it in your configuration folder. </p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+You will also need to install use-package, which is explained article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Org-Roam basic configuration</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">org-directory</span> (<span style="color:#06b;font-weight:bold">concat</span> (<span style="color:#963">getenv</span> <span style="background-color:#fff0f0">&#34;HOME&#34;</span>) <span style="background-color:#fff0f0">&#34;/Documents/notes/&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">org-roam</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:after</span> <span style="color:#963">org</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:init</span> (<span style="color:#007020">setq</span> <span style="color:#963">org-roam-v2-ack</span> <span style="color:#036;font-weight:bold">t</span>) <span style="color:#888">;; Acknowledge V2 upgrade</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:custom</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">org-roam-directory</span> (<span style="color:#963">file-truename</span> <span style="color:#963">org-directory</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">org-roam-setup</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span> ((<span style="background-color:#fff0f0">&#34;C-c n f&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-node-find</span>)
+</span></span><span style="display:flex;"><span>           (<span style="background-color:#fff0f0">&#34;C-c n r&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-node-random</span>)		    
+</span></span><span style="display:flex;"><span>           (<span style="color:#007020">:map</span> <span style="color:#963">org-mode-map</span>
+</span></span><span style="display:flex;"><span>                 ((<span style="background-color:#fff0f0">&#34;C-c n i&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-node-insert</span>)
+</span></span><span style="display:flex;"><span>                  (<span style="background-color:#fff0f0">&#34;C-c n o&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-id-get-create</span>)
+</span></span><span style="display:flex;"><span>                  (<span style="background-color:#fff0f0">&#34;C-c n t&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-tag-add</span>)
+</span></span><span style="display:flex;"><span>                  (<span style="background-color:#fff0f0">&#34;C-c n a&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-alias-add</span>)
+</span></span><span style="display:flex;"><span>                  (<span style="background-color:#fff0f0">&#34;C-c n l&#34;</span> <span style="color:#333">.</span> <span style="color:#963">org-roam-buffer-toggle</span>)))))</span></span></code></pre></div>
+</div>
+<p>
+The first line defines the default file for Org mode files. I store my Org-Roam notes in <code class="verbatim">/Documents/notes/</code> in my home folder. You need to change the name of the folder to your personal preference. The <code class="verbatim">(getenv ““HOME””)</code> part of this configuration is your home folder, so you only need to modify the relative path between quotation marks.</p>
+<p>
+The  <code class="verbatim">setq</code> prevents a warning for users that recently upgraded from version one, which uses a different database structure.</p>
+<p>
+The <code class="verbatim">org-roam-setup</code> function initiates the database, which can take a while the first time round if you have many existing notes.</p>
+<p>
+Lastly, the configuration defines the keyboard shortcuts. The first three shortcuts are added to the overall keyboard map, so you can activate it from anywhere in Emacs. The last five lines are only valid when you are in an open Org mode buffer. Note that all shortcuts start with <code class="verbatim">C-c n</code> to provide consistency.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-2">
+<h2 id="headline-6">
+Creating and Taking Notes
+</h2>
+<div id="outline-text-headline-6" class="outline-text-2">
+<p>We are finally ready to write notes. You add a new note with the <code class="verbatim">org-roam-node-find</code> function (<code class="verbatim">C-c n f</code>). You can type the name of an existing note or of a new note. The Helm <a href="https://lucidmanager.org/productivity/emacs-completion-system/">completion system</a>, which we configured earlier, shows a list of available nodes and filters options as you type. Org-roam also works with other completion frameworks, such as Ivy.</p>
+<p>
+When you create a new node, it will open in a capture screen. You complete the node with <code class="verbatim">C-c C-c</code> and cancel it with <code class="verbatim">C-c C-k</code>. When you complete the node, Org-Roam will construct a filename and save it to disk. There is need to worry too much about the filename because you will be retrieving nodes through their title and tags, rather than a filename.</p>
+<p>
+An Org-Roam file (called a node) is just another Org mode file with some minor differences. The file starts with a properties drawer that defines the file ID. Using an ID instead of a file name makes it easier to maintain link integrity when you change file names or titles. A node can also contain one or more aliases, so you can search on multiple names. </p>
+<p>
+The remainder of the file contains the header and content. Note the <code class="verbatim">#+filetags:</code> property. A file tag is a way to add tags to files so you can easily group entries. The tags are displayed after the title or alias when you find a new or existing file.</p>
+<p>
+When you first create a new file, a capture screen appears where you can write your note. To save the note to your system, press <code class="verbatim">C-c C-c</code>, to cancel creating a new note, press <code class="verbatim">C-c C-k</code>.</p>
+<div class="src src-org">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-org" data-lang="org"><span style="display:flex;"><span><span style="color:#888">  :PROPERTIES:
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">  :ID: f1bdb099-2184-46cf-a952-4808baa00b09
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">  :ROAM_ALIASES: &#34;Note taking with Org-roam&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888">  :END:</span>
+</span></span><span style="display:flex;"><span>  #+title: Zettelkasten method with Org-roam
+</span></span><span style="display:flex;"><span>  #+filetags: :notes::emacs:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">* </span>First headline</span></span></code></pre></div>
+</div>
+<p>
+If this file exists in your database, you will be able to find it through its title, alias or tag. An alias is useful for registering synonyms of words or definitions of abbreviations (AI / Artificial Intelligence). File tags help you cluster notes by topic.</p>
+<p>
+Your note starts below your header. If you are new to Org-mode, then read the article on <a href="https://lucidmanager.org/productivity/emacs-for-distraction-free-writing/">distraction-free writing</a>.</p>
+<div id="outline-container-headline-7" class="outline-3">
+<h3 id="headline-7">
+Org-Roam Nodes
+</h3>
+<div id="outline-text-headline-7" class="outline-text-3">
+<p>In Org-roam terminology, a file or a registered heading is a node in a network. You can promote a heading inside a file to a node by pressing <code class="verbatim">C-c n o</code>. This will create a property drawer below the heading with an id tag. Use the <code class="verbatim">TAB</code> key to open or close the drawer. <a href="https://orgmode.org/manual/Drawers.html">Drawers are an Org mode functionality</a> to store metadata about files or headings.</p>
+<p>
+Org-roam indexes every node (file or heading with an id) that resides in its designated folder and subfolders in a database. This database contains metadata about the node, such as its title and any links from and to the node.</p>
+</div>
+</div>
+<div id="outline-container-headline-8" class="outline-3">
+<h3 id="headline-8">
+Tags and Aliases
+</h3>
+<div id="outline-text-headline-8" class="outline-text-3">
+<p>To make it easier to group and find nodes, you can give it one or more alias titles with the <code class="verbatim">C-n a</code> shortcut. The main and the alias titles are searchable when finding a node. The name of the alias stored in the drawer at the start of the file.</p>
+<p>
+To add one or more tags to a Org-Roam file, use <code class="verbatim">C-c n t</code>. Note that tags have completion using the <code class="verbatim">TAB</code> key. Tags are also searchable when visiting a node. Tags are a way to add structure to your nodes by adding them to a group. Adding a tag to a heading is as easy as hitting <code class="verbatim">C-c C-c</code>, which is a standard Org mode function.</p>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-3">
+<h3 id="headline-9">
+Linking Nodes
+</h3>
+<div id="outline-text-headline-9" class="outline-text-3">
+<p>The second method to add structure is by linking nodes. You can start writing your note as per usual. Links to existing files are easy to insert with the <code class="verbatim">C-c n i</code> shortcut. Search for the file you want to link to and hit enter.</p>
+<p>
+As your nodes grow in number, you slowly build a personal knowledge network. Org-Roam has graphing capabilities, provided you have the Graphviz package installed, which is outside the scope of this article. The <a href="https://github.com/org-roam/org-roam-ui">org-roam-ui</a> package provides an interactive graphical interface to your node network through your browser. </p>
+</div>
+</div>
+<div id="outline-container-headline-10" class="outline-3">
+<h3 id="headline-10">
+Discovering Nodes
+</h3>
+<div id="outline-text-headline-10" class="outline-text-3">
+<p>If you like to know which files link to the buffer you are currently editing, the use <code class="verbatim">C-c n l</code>. A new window will appear with a list of all files that link to the current buffer. Move to the window with <code class="verbatim">C-c o</code>, select your node, and hit <code class="verbatim">ENTER</code> to open the note. To close the backlinks window, use  <code class="verbatim">C-c n l</code> again.</p>
+<p>
+My favourite function is to open a random note. Pressing <code class="verbatim">C-c n r</code> will open a note and invite you to take a random walk through your knowledge garden.</p>
+</div>
+</div>
+<div id="outline-container-headline-11" class="outline-3">
+<h3 id="headline-11">
+Note Templates
+</h3>
+<div id="outline-text-headline-11" class="outline-text-3">
+<p>The default new node only has a property drawer and a title and the filename starts with a timestamp. You can of course change this default behaviour by setting the <code class="verbatim">org-roam-capture-templates</code> variable.</p>
+<p>
+For example, this configuration creates a new default node with a filename and a template head (<code class="verbatim">file+head</code>).</p>
+<p>
+The file name is based on the title slug (<code class="verbatim">${slug}.org</code>), which is basically the node title in lower case, with spaces replaced by dashes.</p>
+<p>
+The first lines of the head of this node contain the title, the creation date and a <code class="verbatim">#+lastmod:</code> entry, which you can use to store the date it was last saved. To make this happen, you also set the <code class="verbatim">time-stamp-start</code> variable.</p>
+<p>
+The immediate-finish option bypasses the capture system and creates a new file without .</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  (<span style="color:#007020">setq</span> <span style="color:#963">org-roam-capture-templates</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#333">&#39;</span>((<span style="background-color:#fff0f0">&#34;d&#34;</span> <span style="background-color:#fff0f0">&#34;default&#34;</span> <span style="color:#963">plain</span> <span style="background-color:#fff0f0">&#34;%?&#34;</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#007020">:if-new</span>
+</span></span><span style="display:flex;"><span>           (<span style="color:#963">file+head</span> <span style="background-color:#fff0f0">&#34;${slug}.org&#34;</span>
+</span></span><span style="display:flex;"><span>                      <span style="background-color:#fff0f0">&#34;#+title: ${title}\n#+date: %u\n#+lastmod: \n\n&#34;</span>)
+</span></span><span style="display:flex;"><span>           <span style="color:#007020">:immediate-finish</span> <span style="color:#036;font-weight:bold">t</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#963">time-stamp-start</span> <span style="background-color:#fff0f0">&#34;#\\+lastmod: [\t]*&#34;</span>)</span></span></code></pre></div>
+</div>
+<p>
+The template functionality in Org-Roam is extensive, so I will leave it at this example. You can add additional lines to your node template after the title or lastmod entry in this example. The <code class="verbatim">\n</code> indicator denotes a new line.!</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-12" class="outline-2">
+<h2 id="headline-12">
+Taking Notes with Org Roam
+</h2>
+<div id="outline-text-headline-12" class="outline-text-2">
+<p>This is a short introduction to getting you started with Org-roam. There are lots of opinions on how to structure your personal knowledge network. My approach is organic, and I have imported all text files stored in various places in the Org-roam folder. I now have my third brain hemisphere available at my fingertips, thanks to the great work of the Emacs, Org mode, Org-Roam and Deft developers.</p>
+<p>
+The following article in this series outlines how to manage <a href="https://lucidmanager.org/productivity/emacs-bibtex-mode/">bibliographies in Emacs</a> and link these to Org-roam.</p>
+<p>
+All the configuration explained in this series of articles is available as an init file on GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences for undertaking a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      
