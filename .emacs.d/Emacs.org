@@ -1614,11 +1614,3 @@ Preview youtube inside org-mode
 
   (golden-ratio-mode)
 #+end_src
-
-* Yasnippet
-
-#+begin_src emacs-lisp
-;;  (use-package yasnippet)
-;;  (require 'yasnippet)
-;;    (yas-global-mode 1)
-#+end_src
