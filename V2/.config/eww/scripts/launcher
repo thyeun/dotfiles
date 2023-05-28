@@ -15,7 +15,7 @@ function toggle_menu {
 }
 
 function checkupdate {
-    kitty --class update -T update -o font_size=13 -e yay -Syu && notify-send 'The system has been updated' &
+    foot --app-id update -T update yay -Syu && notify-send 'The system has been updated' &
 }
 
 function colorpicker {

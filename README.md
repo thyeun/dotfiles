@@ -35,3 +35,20 @@ And below are the images for ```V2```.
 
 ## Emacs
 ![alt text](/images/8.png)
+
+For V2 installation dependencies, e.g on Arch Linux
+```
+yay -S hyprland-git eww-wayland conky-lua ttf-ubuntu-nerd socat jq acpi \
+  bluez pavucontrol brightnessctl playerctl nm-connection-editor imagemagick \
+  gjs gnome-bluetooth-3.0 upower networkmanager gtk3 \
+  wl-gammactl wlsunset wl-clipboard hyprpicker hyprshot blueberry \
+  polkit-gnome
+```
+For V2 optional dependencies, e.g on Arch linux
+```
+yay -S inotify-tools
+```
+### Thanks to 
+- @Aylur for the lovely EWW!
+- @closebox73 for the lovely Conky!
+
