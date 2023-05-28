@@ -1,0 +1,390 @@
+;------------------
+;POLYBAR2
+;------------------
+;;---------------------------------------
+;		COLORS
+;---------------------------------------
+
+[colors]
+black = #263238
+white = #D8DEE9
+red = #BF616A
+red1 = #BF3B48
+green = #94AD7D
+green1 = #70AD37
+blue = #5E81AC
+blue1 = #3C6EAC
+cyan = #7AACBA
+cyan1 = #56A4BA
+violet = #B48EAD
+violet1 = #B46AA6
+orange = #D08770
+;orange = #ff3d00
+orange1 = #D06847
+yellow = #CFB074
+;yellow = #ffa800
+yellow1 = #CF9B36
+focus = #8C8C8C
+focus1 = #757575
+unfocus = #263238
+unfocus1 = #263238
+;---------------------------------------
+;		GLOBAL
+;---------------------------------------
+
+[bar/mainbar-i3]
+width = 100%
+height = 18
+bottom = true
+border-size = 0
+background = ${colors.black}
+foreground = ${colors.white}
+fixed-center = true
+line-size = 4
+line-color = #f00
+padding-left = 0
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 1
+enable-ipc = true
+
+;tray-detached = true
+;tray-offset-x = 0
+;tray-offset-y = -50
+;tray-padding = 2
+;tray-maxsize = 20
+;tray-scale = 1.0
+;tray-position = none
+;tray-background = ${colors.black}
+
+;---------------------------------------
+;		FONTS
+;---------------------------------------
+
+font-0 = "MesloLGS Nerd Font:weight=bold:size=5;2"
+font-1 = "Noto Sans:size=10;0"
+
+;---------------------------------------
+;	     MODULES LAYOUT
+;---------------------------------------
+
+modules-left = i3 xwindow 
+modules-right = arch-aur-updates mail date profile
+modules-center = kernel 
+
+;---------------------------------------
+;	     MEMORY
+;---------------------------------------
+[module/memory]
+type = internal/memory
+; Seconds to sleep between updates
+; Default: 1
+interval = 3
+format = <label>
+label = "  %gb_used% " 
+format-foreground = ${colors.black}
+format-background = ${colors.green}
+format-underline = ${colors.green1}
+;---------------------------------------
+;	     CPU
+;---------------------------------------
+
+[module/cpu]
+type = internal/cpu 
+interval = 2
+format = <label>
+label = "﬙ %percentage:2%%"
+format-foreground = ${colors.black}
+format-background = ${colors.cyan}
+format-padding = 1
+format-underline = ${colors.cyan1}
+;---------------------------------------
+;	     MPD
+;---------------------------------------
+
+[module/mpd]
+type = internal/mpd
+host = 127.0.0.1
+port = 6600
+format-online = <toggle> <label-song>
+;alt icons = 
+format-online-background = ${colors.blue}
+format-online-foreground = ${colors.black}
+format-online-padding = 1
+icon-play = 
+;icon-prev = 
+;icon-next = 
+icon-pause = 
+label-song =  "%{A1:mpc next && mpdfy:}%title:0:40:...%%{A}"
+label-song-ellipsis = true
+;bar-progress-width = 13
+;bar-progress-indicator = ⊙
+;bar-progress-fill = ━
+;bar-progress-empty = ─
+label-offline = mpd is offline
+format-online-underline = ${colors.blue1}
+format-offline-underline = ${colors.white}
+;---------------------------------------
+;	     WORKSPACE
+;---------------------------------------
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.focus}
+
+; focused = Active workspace on focused monitor
+label-focused = %icon%
+label-focused-background = ${colors.focus}
+label-focused-foreground = ${colors.black}
+label-focused-underline= ${colors.focus1}
+label-focused-padding = 2
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %icon%
+label-unfocused-padding = 2
+label-unfocused-background = ${colors.unfocus}
+label-unfocused-underline= ${colors.unfocus1}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %icon%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %icon%
+label-urgent-background = #5f5f5f
+label-urgent-padding = 2
+
+;extra icons to choose from
+;http://fontawesome.io/cheatsheet/
+;       v      ☣ 🐲
+
+; Use fuzzy (partial) matching on labels when assigning
+; icons to workspaces
+; Example: code;♚ will apply the icon to all workspaces
+; containing 'code' in the label
+; Default: false
+fuzzy-match = false
+
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
+ws-icon-5 = 6;
+ws-icon-6 = 7;
+ws-icon-7 = 8;
+ws-icon-8 = 9;
+ws-icon-9 = 10;
+ws-icon-default = " "
+
+;---------------------------------------
+;	   XWINDOW
+;---------------------------------------
+
+[module/xwindow]
+type = internal/xwindow
+format-foreground = ${colors.yellow}
+format-background = ${colors.black}
+format-padding = 5
+label = " %title:0:100:...% "
+
+;---------------------------------------
+;	   XBACKLIGHT
+;---------------------------------------
+
+[module/xbacklight]
+type = internal/xbacklight
+format = <label>
+format-foreground = ${colors.black}
+format-background = ${colors.orange}
+label = " 盛 %percentage%% "
+format-underline = ${colors.orange1}
+;---------------------------------------
+;	   DATE
+;---------------------------------------
+
+[module/date]
+type = internal/date
+interval = 1
+date = %a %d %b %Y
+time = %H:%M:%S
+label = "  %date%   %time% "
+format-foreground = ${colors.black}
+format-background = ${colors.violet}
+format-underline = ${colors.violet1}
+;---------------------------------------
+;	   VOLUME
+;---------------------------------------
+
+[module/pulseaudio]
+type = internal/pulseaudio
+sink = alsa_output.pci-0000_00_1b.0.analog-stereo
+use-ui-max = true
+interval = 5
+format-volume = <ramp-volume><label-volume>
+format-volume-foreground = ${colors.black}
+format-volume-background = ${colors.yellow}
+label-volume = "%percentage% "
+label-volume-foreground = ${colors.black}
+label-volume-background = ${colors.yellow}
+label-muted = " mute "
+label-muted-foreground = ${colors.black}
+label-muted-background = ${colors.yellow}
+ramp-volume-0 = "  "
+ramp-volume-0-foreground = ${colors.black}
+ramp-volume-0-background = ${colors.yellow}
+ramp-volume-1 = "  "
+ramp-volume-1-foreground = ${colors.black}
+ramp-volume-1-background = ${colors.yellow}
+ramp-volume-2 = "  "
+ramp-volume-2-foreground = ${colors.black}
+ramp-volume-2-background = ${colors.yellow}
+ramp-volume-3 = "  "
+ramp-volume-3-foreground = ${colors.black}
+ramp-volume-3-background = ${colors.yellow}
+format-volume-underline = ${colors.yellow1}
+;---------------------------------------
+;	   BATTERY
+;---------------------------------------
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 99
+format-charging = <label-charging>
+format-charging-foreground = ${colors.black}
+format-charging-background = ${colors.red}
+format-full = <label-full>
+format-full-foreground = ${colors.black}
+format-full-background = ${colors.red}
+format-discharging = <label-discharging>
+format-discharging-foreground = ${colors.black}
+format-discharging-background = ${colors.red}
+label-charging = "  %percentage%% "
+label-discharging ="  %percentage%% "
+label-discharging-foreground = ${colors.black}
+label-full = "  %percentage%% "
+
+format-charging-underline = ${colors.red1}
+format-discharging-underline = ${colors.red1}
+format-full-underline = ${colors.red1}
+
+;---------------------------------------
+;	   Updates
+;---------------------------------------
+
+[module/arch-aur-updates]
+type = custom/script
+exec = ~/.config/polybar/scripts/check-all-updates.sh
+interval = 100
+label = "  Updates: %output% "
+click-left = exec termite -e 'trizen -Syu'
+format-foreground = ${colors.black}
+format-background = ${colors.red}
+format-underline = ${colors.red1}
+
+;---------------------------------------
+;	   Kernel
+;---------------------------------------
+
+[module/kernel]
+type = custom/script
+exec = uname -r
+tail = false
+interval = 1024
+label = "  %output% "
+format-foreground = ${colors.orange}
+format-background = ${colors.black}
+;format-prefix = "  "
+;format-prefix-foreground = #0084FF
+;format-underline = #00ff1e
+
+;---------------------------------------
+;	   Scroll msg
+;---------------------------------------
+
+[module/test]
+type = custom/script
+exec = ~/.config/polybar/scripts/test.sh
+interval = 1
+;label = " %output% "
+;label = " message "
+format-foreground = ${colors.white}
+format-background = ${colors.black}
+;format-underline = ${colors.red1}
+
+[module/powermenu]
+type = custom/menu
+expand-right = false
+
+label-open = "    "
+label-close = "      "
+;label-close-foreground = ${colors.black}
+label-separator = •
+
+menu-0-0 = "  "
+menu-0-0-exec = systemctl reboot
+menu-0-1 = "    "
+menu-0-1-exec = systemctl poweroff
+menu-0-2 = "    "
+menu-0-2-exec = i3-msg exit
+menu-0-3 = "    "
+menu-0-3-exec = systemctl hibernate
+menu-0-4 = "    "
+menu-0-4-exec = 
+
+;---------------------------------------
+;	   Scroll email
+;---------------------------------------
+
+[module/mail]
+type = custom/script
+interval = 1
+;format = <label>
+label = "   %output% "
+format-foreground = ${colors.black}
+format-background = ${colors.yellow}
+format-underline = ${colors.yellow1}
+exec = python ~/.config/polybar/scripts/mail
+click-left = exec chromium https://mail.google.com/mail/u/0/#inbox >/dev/null 2>&1 &
+
+[module/easteregg-pornhub]
+type = custom/script
+exec = echo " hub "
+interval = 3600
+click-left = exec firefox --private-window https://pornhub.com/random &
+
+format = <label>
+format-prefix = "  Porn "
+format-prefix-foreground = #ffffff
+format-prefix-background = #000000
+
+format-overline = #000000
+format-underline = #000000
+format-foreground = #000000
+format-background = #ffa500
+
+format-suffix = " "
+format-suffix-background = #000000
+format-suffix-foreground = #000000
+
+;---------------------------------------
+;	   Scroll profile
+;---------------------------------------
+
+[module/profile]
+type = custom/script
+exec = echo "  "
+interval = 1
+click-left = exec mugshot
+format-foreground = ${colors.black}
+format-background = ${colors.green}
+format-underline = ${colors.green1}
