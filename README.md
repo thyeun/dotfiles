@@ -32,3 +32,6 @@ And below are the images for ```V2```.
 
 ## Foot & Neofetch & cava
 ![alt text](/images/7.png)
+
+## Emacs
+![alt text](/images/8.png)
