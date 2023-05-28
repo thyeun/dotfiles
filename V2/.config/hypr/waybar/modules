@@ -1,0 +1,226 @@
+{
+  "backlight": {
+    "interval": 2,
+    "align": 0,
+    "rotate": 0,
+      "format": "{icon} {percent}",
+      "format-icons": ["", "", "", ""],
+      "on-click": "",
+      "on-click-middle": "",
+      "on-click-right": "",
+      "on-update": "",
+      "on-scroll-up": "~/.config/hypr/scripts/brightness --inc",
+      "on-scroll-down": "~/.config/hypr/scripts/brightness --dec",
+      "smooth-scrolling-threshold": 1,
+    },
+
+	"wlr/workspaces-cn": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "all-outputs": true,
+    "sort-by-number": true,
+    "format-icons": {
+      "1": "一",
+      "2": "二",
+      "3": "三",
+      "4": "四",
+      "5": "五",
+      "6": "六",
+      "7": "七",
+      "8": "八",
+      "9": "九",
+      "10": "十",
+      "focused": "",
+      "default": ""
+    },
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+  },
+
+  "wlr/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "all-outputs": true,
+    "sort-by-number": true,
+    "format-icons": {
+      "1": "₁",
+      "2": "₂",
+      "3": "₃",
+      "4": "₄",
+      "5": "₅",
+      "6": "₆",
+      "7": "₇",
+      "8": "₈",
+      "9": "₉",
+      "10": "10₀",
+      "focused": "",
+      "default": ""
+    },
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+  },
+	
+  "battery": {
+		"interval": 60,
+		"align": 0,
+		"rotate": 0,
+		//"bat": "BAT1",
+		//"adapter": "ACAD",
+		"full-at": 100,
+		"design-capacity": false,
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-full": "{icon} Full",
+    //"format-good": "",
+    "format-alt": "{icon} {time}",
+    "format-icons": ["", "", "", "", ""],
+    "format-time": "{H}h {M}min",
+    "tooltip": true,
+    "on-click-right": "~/.config/hypr/scripts/glassmorphismToggle"
+  },
+
+  "clock": {
+    "interval": 1,
+    "align": 0,
+    "rotate": 0,
+    "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+    "format": "{:%d %b, %H:%M:%S}",
+    "format-alt": " {:%a %b %d, %G}",
+  },
+
+  "cpu": {
+    // "interval": 5,
+    // "format": " {usage}%",
+    "interval": 1,
+    "format": "{icon0}{icon1}{icon2}{icon3} {usage:>2}% ",
+    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+  },
+           
+  "custom/menu": {
+    "format": "  ",
+    "tooltip": false,
+    "on-click": "$HOME/.config/hypr/scripts/menu",
+  },
+
+  "custom/power": {
+    "format": "  ",
+    "tooltip": false,
+    "on-click": "archlinux-logout",
+  },
+
+  "disk": {
+    "interval": 30,
+    "format": " {free}",
+  },
+
+  "memory": {
+    "interval": 10,
+    "format": " {used:0.1f}G",
+  },
+
+  "network": {
+    "interval": 1,
+    "format-wifi": "󰑩 {essid}",
+    //"format-wifi": "󰑩   {essid}",
+    //"max-length":7,
+    "format-ethernet": " {ipaddr}/{cidr}",
+    "format-linked": " {ifname} (No IP)",
+    "format-disconnected": "󱖣 Disconnected",
+    "format-disabled": "󱖣 Disabled",
+    "format-alt": " {bandwidthUpBits} |  {bandwidthDownBits}",
+    "tooltip-format": " {ifname} via {gwaddr}",
+    "tooltip": false,
+    "on-click-right": "nm-connection-editor",
+  },
+
+  "custom/weather": {
+    "format": "{}",
+    "format-alt": "{alt}: {}",
+    "format-alt-click": "click-right",
+    "interval": 1800,
+    "return-type": "json",
+    "exec": "~/.config/hypr/scripts/weather.sh",
+    "exec-if": "ping wttr.in -c1"
+  },
+
+  "custom/updater":{
+    "format": " {}",
+    "exec": "checkupdates | wc -l",
+    "exec-if": "[[ $(checkupdates | wc -l) ]]",
+    "interval": 1,
+    "tooltip": false,
+    //"on-click": "foot --app-id update -T update yay -Syu && notify-send 'The system has been updated' "
+    "on-click": "kitty --class update -T update -o font_size=13 -e yay -Syu && notify-send 'The system has been updated' "
+  },
+
+  "custom/cycle_wall":{
+    "format":"",
+    //"on-click": "~/.config/hypr/scripts/changeWallpaper",
+    "on-click": "killall swaybg && swaywal &",
+    "tooltip-format": "Change wallpaper",
+    "tooltip": false,
+  },
+
+  "pulseaudio": {
+    /* "format": "{icon} {volume}% {format_source}", */
+    "format": "{icon} {volume}",
+    "format-muted": "󰖁  Mute",
+    "format-bluetooth": " {volume}% {format_source}",
+    "format-bluetooth-muted": " Mute",
+    "format-source": " {volume}",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["󰕾", "󰕾", "󰕾"]
+    },
+    "scroll-step": 5.0,
+    "on-click": "pamixer -t",
+    "on-click-right": "pavucontrol",
+    "on-scroll-up": "~/.config/hypr/scripts/volume --inc",
+    "on-scroll-down": "~/.config/hypr/scripts/volume --dec",
+    "smooth-scrolling-threshold": 1,
+    "tooltip": false,
+  },
+
+  "custom/recorder": {
+        "format": "󰖠 On-air",
+        //"format-stopped": " Off-air", //An empty format will hide the module.
+        "return-type": "json",
+        "interval": 1,
+        "exec": "echo '{\"class\": \"recording\"}'",
+        "exec-if": "pgrep wf-recorder",
+        "on-click": "",
+        "tooltip": false,
+  },
+
+ "custom/cava-internal": {
+        "exec": "sh /home/thyeun/.config/hypr/scripts/Cava.sh",
+        "format": "{}",
+        "tooltip": false,
+        "on-click": "swaymsg reload & pkill waybar & waybar",
+        "layer": "below",
+        "output": "all"
+    },      
+
+  "custom/keybindings": {
+  "format":"爵",
+  "tooltip": false,
+  "on-click": "~/.config/hypr/scripts/keyhint",
+  },
+
+  "tray": {
+    "icon-size": 18,
+    "spacing": 6
+  }
+}

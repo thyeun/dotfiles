@@ -1,0 +1,89 @@
+
+	
+<p>
+<a href="http://localhost:1313/tags/emacs/">Emacs</a> is the most user friendly piece of software ever invented by humanity. I use it for 90% of my computing task, including keeping my digital knowledge garden with notes. Several notes packages exist, with <a href="https://www.orgroam.com/">Org Roam</a> as the most popular and fully-featured. I have used this package for a while now, but it relies on a database and has grown a feature set far beyond my needs.</p>
+<p>
+Protesilaos (Prot) Stavrou is developing the <a href="https://protesilaos.com/emacs/denote">Denote package</a> that goes back to the basics of Emacs. The defining feature of this package is a file-naming convention that acts as metadata to find your notes. The basic structure is: <code class="verbatim">YYYMMDDTHHMMSS--file-name-dashed__keyword1_keyword2.extension</code>. The filename starts with a timestamp at one second resolution to ensure unique file names (unless you create more than one per second). This timestamp also acts as the unique identifier to link notes. The timestamp is followed by two dashes and the sluggified file name. Two underscores after the file name indicate the start of the keywords, separated by one underscore. This convention provides a convenient heuristics to find notes based on dates, title and keywords. Denote supports either Org mode, plain text or Markdown files.</p>
+<p>
+The simplicity of Denote allows for it to be easily integrated with other Emacs packages and it can be easily extended with some Emacs Lisp code. I am working on a package to <a href="https://github.com/pprevos/denote-citar">integrate it with Citar</a> so that notes can be linked to a bibliography.</p>
+<p>
+I decided to have a play with this package and considered moving away from Org Roam to the monastic simplicity of Denote. But before I decided to convert my existing knowledge base, I wanted to see how it behaves with thousands of files in a single folder. Rather then converting my existing files, I decided to generate some random files to see how it performs.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Generating Random Text Files for Emacs Denote
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>My coding chops in R are much better than Emacs Lisp, so I decided to write some R code to generate random text files and take Denote through its paces.</p>
+<p>
+This code uses the <a href="https://boardgames.stackexchange.com/questions/38366/latest-collins-scrabble-words-list-in-text-file">Collins Scrabble Word list</a> to generate random file names and keywords. Download this file to your working directory before using this code. The code reads the file and generates a set of 50 keywords. Random timestamps are set somewhere in the distant future. Each file has a template for the front matter.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Simulate n files in denote folder</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">## Initiation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(stringr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  n <span style="color:#333">&lt;-</span> <span style="color:#60e;font-weight:bold">10000</span>
+</span></span><span style="display:flex;"><span>  k <span style="color:#333">&lt;-</span> <span style="color:#60e;font-weight:bold">50</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  wordlist <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">readLines</span>(<span style="background-color:#fff0f0">&#34;collins-scrabble-words-2019.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>  wordlist <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">tolower</span>(words)
+</span></span><span style="display:flex;"><span>  tag_words <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">sample</span>(words<span style="color:#06b;font-weight:bold">[nchar</span>(wordlist) <span style="color:#333">&lt;=</span> <span style="color:#60e;font-weight:bold">5</span>], k)
+</span></span><span style="display:flex;"><span>  timestamps <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">Sys.time</span>() <span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#60e;font-weight:bold">600E6</span><span style="color:#333">:</span><span style="color:#60e;font-weight:bold">666E6</span>, n)
+</span></span><span style="display:flex;"><span>  template <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;#+title:      &#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="background-color:#fff0f0">&#34;#+date:       &#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="background-color:#fff0f0">&#34;#+filetags:   &#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="background-color:#fff0f0">&#34;#+identifier: &#34;</span>)
+</span></span><span style="display:flex;"><span>  denote_directory <span style="color:#333">&lt;-</span> <span style="background-color:#fff0f0">&#34;~/denote-sim/&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">dir.create</span>(denote_directory)</span></span></code></pre></div>
+</div>
+<p>
+This next code snippet generates <code class="verbatim">n</code> Org mode files in the <code class="verbatim">denote_directory</code> folder. Titles are extracted by sampling the word list and the tags (keywords) are sampled from the 50 defined tags. The front matter includes the tile, the creation date, the keywords (called filetags in Org mode) and the identifier. The Lorem Ipsum generator in the stringr package generates some paragraphs of text. The last part of the code generates some links to random posts.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Generate n random posts</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">for</span>(i in <span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span>n) {
+</span></span><span style="display:flex;"><span>      title <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="color:#06b;font-weight:bold">sample</span>(wordlist, <span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#60e;font-weight:bold">2</span><span style="color:#333">:</span><span style="color:#60e;font-weight:bold">5</span>, <span style="color:#60e;font-weight:bold">1</span>)), collapse <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;-&#34;</span>)
+</span></span><span style="display:flex;"><span>      tags <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="color:#06b;font-weight:bold">sample</span>(tag_words, <span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#60e;font-weight:bold">4</span>, <span style="color:#60e;font-weight:bold">1</span>)), collapse <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;_&#34;</span>)
+</span></span><span style="display:flex;"><span>      identifier <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">format</span>(timestamps[i], <span style="background-color:#fff0f0">&#34;%Y%m%dT%H%M%S&#34;</span>)
+</span></span><span style="display:flex;"><span>      front_matter <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="color:#06b;font-weight:bold">paste0</span>(template[1],
+</span></span><span style="display:flex;"><span>                               <span style="color:#06b;font-weight:bold">str_to_title</span>(<span style="color:#06b;font-weight:bold">str_replace_all</span>(title, <span style="background-color:#fff0f0">&#34;-&#34;</span>, <span style="background-color:#fff0f0">&#34; &#34;</span>))),
+</span></span><span style="display:flex;"><span>                        <span style="color:#06b;font-weight:bold">paste0</span>(template[2],
+</span></span><span style="display:flex;"><span>                               <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#34;[&#34;</span>, <span style="color:#06b;font-weight:bold">format</span>(timestamps[i], <span style="background-color:#fff0f0">&#34;%F %a %H:%M&#34;</span>), <span style="background-color:#fff0f0">&#34;]&#34;</span>)),
+</span></span><span style="display:flex;"><span>                        <span style="color:#06b;font-weight:bold">paste0</span>(template[3],
+</span></span><span style="display:flex;"><span>                               <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#34;:&#34;</span>, <span style="color:#06b;font-weight:bold">str_replace_all</span>(tags, <span style="background-color:#fff0f0">&#34;_&#34;</span>, <span style="background-color:#fff0f0">&#34;:&#34;</span>), <span style="background-color:#fff0f0">&#34;:&#34;</span>)),
+</span></span><span style="display:flex;"><span>                        <span style="color:#06b;font-weight:bold">paste0</span>(template[4], identifier))
+</span></span><span style="display:flex;"><span>      links_list <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">vector</span>()
+</span></span><span style="display:flex;"><span>      <span style="color:#06b;font-weight:bold">for </span>(j in <span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span>(<span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span><span style="color:#60e;font-weight:bold">5</span>, <span style="color:#60e;font-weight:bold">1</span>))) {
+</span></span><span style="display:flex;"><span>          links_list[j] <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#34;- &#34;</span>, <span style="background-color:#fff0f0">&#34;[[denote:&#34;</span>,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#06b;font-weight:bold">format</span>(timestamps, <span style="background-color:#fff0f0">&#34;%Y%m%dT%H%M%S&#34;</span>), <span style="color:#60e;font-weight:bold">1</span>), <span style="background-color:#fff0f0">&#34;]]&#34;</span>)
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      content <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">c</span>(front_matter,
+</span></span><span style="display:flex;"><span>                   <span style="background-color:#fff0f0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                   stringi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">stri_rand_lipsum</span>(<span style="color:#60e;font-weight:bold">1</span>),
+</span></span><span style="display:flex;"><span>                   <span style="background-color:#fff0f0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                   <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;*&#34;</span>, <span style="color:#06b;font-weight:bold">str_to_title</span>(<span style="color:#06b;font-weight:bold">paste</span>(<span style="color:#06b;font-weight:bold">sample</span>(wordlist,
+</span></span><span style="display:flex;"><span>                                                        <span style="color:#06b;font-weight:bold">sample</span>(<span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span><span style="color:#60e;font-weight:bold">3</span>, <span style="color:#60e;font-weight:bold">1</span>)),
+</span></span><span style="display:flex;"><span>                                                 collapse <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34; &#34;</span>))),
+</span></span><span style="display:flex;"><span>                   links_list)
+</span></span><span style="display:flex;"><span>      filename <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste0</span>(denote_directory, identifier, <span style="background-color:#fff0f0">&#34;--&#34;</span>, title, <span style="background-color:#fff0f0">&#34;__&#34;</span>, tags, <span style="background-color:#fff0f0">&#34;.org&#34;</span>)
+</span></span><span style="display:flex;"><span>      <span style="color:#06b;font-weight:bold">writeLines</span>(content, filename)
+</span></span><span style="display:flex;"><span>  }</span></span></code></pre></div>
+</div>
+<p>
+Generating thousands of files will take a few minutes …</p>
+<p>
+Using this code I generated ten thousands notes and used this to test the Denote package to see it if works at a large scale. This tests shows that Prot&#39;s approach is perfectly capable of working with thousands of notes. Just for kicks, I also synchronised these files with an Org Roam setup. My laptop struggled with the computational load and I was unable to properly access the files as it struggled with the large number of files. So case, closed - I am moving to Denote and teach myself more Emacs Lisp to build my ideal zettelkasten.</p>
+<p>
+<a href = "https://www.r-bloggers.com/" target="_blank" title="Proudly associated with R-Bloggers">
+  <button class="button is-link is-medium">
+    <span class="icon is-large">
+      <i class="fab fa-r-project"></i>
+    </span>
+    <span>As seen on R Bloggers</span>
+  </button>
+</a>
+</p>
+</div>
+</div>
+
+      

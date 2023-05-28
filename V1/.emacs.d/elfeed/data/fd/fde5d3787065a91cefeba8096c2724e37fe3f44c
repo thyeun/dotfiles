@@ -1,0 +1,170 @@
+
+	
+<p>
+The 21<sup>st</sup> century is full of distractions. Media companies are waging a constant battle for our eyeballs, spawning a golden age of television and Internet content. While this battle results in great works of art, it can also keep us from being creative and productive. This series of articles explains how to become more productive with Emacs.</p>
+<p>
+The first step in becoming more productive seems to be to find the perfect software tool to help you manage the vast amounts of information we need to deal with in our endeavours. Most people manage a complex web of tools to satisfy their needs.</p>
+<p>
+I have been in that situation — hopping from application to application to perform what I needed to do—jumping from action lists to my schedule, onward to the word processor and spreadsheet, pdf reader and so on. Wouldn’t it be nice if there was one program that could help you with almost all your tasks?</p>
+<p>
+Welcome to the Emacs computing system!</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+What is Emacs?
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>The official tagline of <a href="https://www.gnu.org/software/emacs/">GNU Emacs</a> is that it is an “extensible self-documenting text editor”. These words do, however, barely describe Emacs because they focus on its original purpose as a software development tool.</p>
+<p>
+Emacs is a multi-purpose computing environment that can help you manage your information, track projects, write articles, books, websites and any other text-based activity. You could say that Emacs is like TextEdit or Notepad on steroids. The first version of Emacs was developed almost forty years ago, which might seem like this software is obsolete. However, a vibrant community of developers continually improves the system.</p>
+<blockquote>
+<p>Emacs is not a productivity hack, it is a productivity hacking system.</p>
+</blockquote>
+<p>
+When you use a computer, you more than likely need to use a lot of different programs. You write a memo in a word processor, then switch to a spreadsheet to create a graph, which you then copy and paste into your memo. Next, you open your email client to send the memo to your colleague. our last step is to close the action in your productivity tool. After this hard work, you might play a game and open Tetris. When using these pieces of software, you might have to learn different skills for each program. You have to use the software the way the developers intended you to use it.</p>
+<p>
+Working with Emacs is a different experience. You write the memo in Emacs, create the graph with Emacs, email the result and close the action with Emacs. Finally you <a href="https://www.masteringemacs.org/article/fun-games-in-emacs">play the game</a>, you guessed it, within Emacs. If you use Emacs, you only need to use to learn one piece of software, and you can configure it to work the way you prefer to use it, not the way a programmer wants you to use the software.</p>
+<p>
+At first instance, Emacs can look more like an <a href="https://www.urbandictionary.com/define.php?term=angry%20fruit%20salad">angry fruit salad</a> than a modern piece of software. Don’t let these simple looks fool you, as, under the hood, this is a robust system. The video below shows what it is like to use Emacs and the Org mode package. </p>
+<figure>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/hnMntOQjs7Q" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<figcaption>
+Emacs Org Mode demonstration.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Why use Emacs?
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>Emacs is not a text editor or word processor, nor is it a spreadsheet or an email client. Emacs is a <a href="https://malleable.systems/blog/2020/04/01/the-most-successful-malleable-system-in-history/">malleable software</a> platform, which means it can perform any task that you can undertake with a keyboard. Emacs is so to speak your Swiss-Army Chainsaw of productivity.</p>
+<p>
+The first principle of malleable software is that it is easy to change. Emacs is malleable because you can build applications within the software using the LISP language. This task might sound daunting, but it is about the possibility, it is not compulsory or necessary to write code because most Emacs users share what they have developed. You can extend and configure Emacs with any of the thousands of freely available packages.</p>
+<p>
+Users can configure almost everything in the system with just a little bit of knowledge of the Emacs LISP language. This knowledge requirement might seem a hurdle, but learning how to use it will set you free to enjoy your computer the way it was initially intended. Software should adjust to the user, not the other way around, as with most modern packages.</p>
+<p>
+The advantage of this approach is that you have complete freedom in how you use this software. You can instruct it to do almost anything you like and configure it to your specific needs. The disadvantage is that it requires a wholly different approach to computing compared to contemporary software. Using Emacs throws you back to the original intent of using a computer and genuine user-friendliness.</p>
+<p>
+Are you ready to change the way you use your computer? To paraphrase a famous scene from the Matrix:</p>
+<blockquote>
+<p>You take the blue Microsoft pill—the story ends, and everything stays the same. You take the purple Emacs pill—you stay in Wonderland, and I show you how deep the rabbit hole goes.</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Redefining user-friendliness
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>The lack of slick Apple-esque design in Emacs might discourage new users because they cannot point their mouse or finger at colourful icons. Unfortunately, most software developers confuse user-friendliness with a smooth design and using a mouse. This approach is not friendly at al because to achieve this perceived simplicity, the user loses a lot of power. Graphically-driven software is a gilded cage. It might be pleasant, but it is a cage, nevertheless.</p>
+<p>
+Contemporary software follows the “What You See is What You Get” (WYSIWYG) principle. Graphical interfaces simulate the physical world by making objects on the screen look like pieces of paper and folders on a desk. You point, click and drag documents into folders; documents appear as they would on paper and when done, they go into the rubbish bin. Graphical interfaces are a magic trick that make you believe you are doing physical things. This approach moves people away from understanding how a computer works.</p>
+<p>
+Emacs and other text editors use the “What You See Is What You Mean” (WYSIWYM) principle. As I am writing this book, I don’t see what it will look like in printed form as you would using modern word processors. In Emacs, I only see text, images and some instruction for the computer on what the final product should look like. This approach allows me to focus on writing text instead of worrying about the end product.</p>
+<p>
+The WYSIWYG approach distracts the mind from the content and lures the user into fiddling with style instead of writing text. Office workers around the globe waste a lot of time trying to format or typeset documents. Following the Emacs way will help you become more productive by worrying about the document’s design until completing the text. As I am writing this book, it only takes just a couple of keystrokes to convert the text into a fully formatted ebook or web page, ready for distribution.</p>
+<p>
+The images below show what this looks like. The left side shows what this article looked like while writing it. The right side shows the result after rendering the content. The colours on the screen indicate the function of the text, such as headers or meta data, instead of the actual colour. The fonts are uniform and images are hidden to allow me to focus on the text. The <a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">Hugo package</a> converts the text in Emacs to a useable website using templates.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/wysiwym.jpg" alt="The WYSIWYM approach with Emacs Org mode and Hugo." title="The WYSIWYM approach with Emacs Org mode and Hugo."/>
+<figcaption>
+The WYSIWYM approach: Left, this article as I am writing it in Emacs. Right: The exported result.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-2">
+<h2 id="headline-4">
+The learning curve
+</h2>
+<div id="outline-text-headline-4" class="outline-text-2">
+<p>The second hurdle is that when you first open Emacs, all you see is the splash screen. To make Emacs work for you, you will need to learn the <a href="https://lucidmanager.org/productivity/getting-started-with-emacs/">basics principles of using this editor</a> and learn some of the associated add-on packages. As Emacs is old software, some of the default settings and terminology are not the same as contemporary graphical software. </p>
+<blockquote>
+<p>The steeper the learning curve, the bigger the reward.</p>
+</blockquote>
+<p>
+For example, opening a file is ‘visiting a file’. Pasting a text is’ yanking’, and cutting a text is the same as ’killing’ it. Perhaps the Emacs terminology is a bit more poetic than the current terms which are based on handicraft activities such as cutting and pasting.</p>
+<p>
+The trick to learning Emacs is to not get overwhelmed by the virtually infinite configuration options, but to only learn those bits of functionality that you need to do what you need to do. Even without any configuration, you can do a lot with Emacs. </p>
+<p>
+To configure the software to your wishes, you will need to learn some Emacs Lisp. While that might sound daunting, you can simply copy and paste (kill and yank) examples from the Internet. The articles on this website will guide you through what you need to know for Emacs to become a writing tool. You can also download and use the configuration file from these articles to get you started.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-2">
+<h2 id="headline-5">
+Advantages of using Emacs
+</h2>
+<div id="outline-text-headline-5" class="outline-text-2">
+<p>These are some of the major advantages of using Emacs to create written content:</p>
+<ol>
+<li>One piece of software to undertake most of your computing activities makes you more productive because you only need to master one system.</li>
+<li>You store all your information in plain text files. You will never have any problems with compatibility due to esoteric file formats.</li>
+<li>You can modify almost everything in the software to make it suit your specific workflow.</li>
+<li>Emacs runs on all major operating systems: GNU/Linux, Windows, Chrome OS, and Apple’s OS X.</li>
+<li>Emacs is open source and supported by a large community willing to help.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-2">
+<h2 id="headline-6">
+Limitations of Emacs
+</h2>
+<div id="outline-text-headline-6" class="outline-text-2">
+<p>After singing the praises of this multi-functional editor, you would almost think that Emacs is the omnipotent god of software. Some people even have established the <a href="http://emacs.nu/">Church of Emacs</a> as a mock religion to express their admiration.</p>
+<p>
+Emacs can display images and integrate them with text, but it has limited functionality to create or modify graphical files. If you need to create or edit pictures, you should consider using GIMP (GNU Image Manipulation Program). Video content is not supported and cannot be easily integrated with the text other than hyperlinks to a file or web page.</p>
+<p>
+The second disadvantage is that Emacs does not (yet) have a fully operational web browser. There are packages to surf the web within Emacs, but they are somewhat limited in functionality.</p>
+<p>
+Emacs has the risk of becoming a productivity sink. But remember that just because you can configure everything does not mean you should. Don&#39;t spend too much time worrying about your workflow, spend this time in your workflow. Most productivity hacks have minimal effect on your real output because you write with your mind, not the keyboard.</p>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-2">
+<h2 id="headline-7">
+More Productive with Emacs
+</h2>
+<div id="outline-text-headline-7" class="outline-text-2">
+<p>This website contains a series of articles to help you complete tasks with Emacs, using minimal but sensible configuration. </p>
+<p>
+This series of articles covers most of the tasks that a researchers and writers undertake. Each of these articles discusses an activity and explains how to do this with Emacs.</p>
+<p>
+The following two articles will introduce you to installing, configuring and using Emacs. The remainder of the articles on this website discusses how to complete assorted tasks. The only topic these articles don’t cover is developing software with Emacs.</p>
+<ol>
+<li><a href="https://lucidmanager.org/productivity/getting-started-with-emacs/">Getting Started with Emacs</a></li>
+<li><a href="https://lucidmanager.org/productivity/configure-emacs/">Configure Emacs</a></li>
+<li><a href="https://lucidmanager.org/productivity/emacs-completion-system/">Emacs Completion System</a></li>
+<li><a href="https://lucidmanager.org/productivity/ricing-org-mode/">Ricing Org mode</a></li>
+<li><a href="https://lucidmanager.org/productivity/emacs-for-distraction-free-writing/">Distraction-Free Writing</a></li>
+<li><a href="https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/">Taking Notes</a></li>
+<li><a href="https://lucidmanager.org/productivity/emacs-bibtex-mode/">Manage your literature with Emacs BibTeX Mode</a></li>
+<li><a href="https://lucidmanager.org/productivity/publishing-with-org-mode-export/">Writing Articles and Books with Org Mode</a></li>
+<li><a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">Create Websites</a></li>
+<li><a href="https://lucidmanager.org/productivity/getting-things-done-with-emacs/">Getting Things Done</a></li>
+<li><a href="https://lucidmanager.org/productivity/manage-files-with-emacs/">Manage files with dired</a></li>
+<li><a href="https://lucidmanager.org/productivity/using-emacs-image-dired/">Manage images with image-dired</a></li>
+<li><a href="https://lucidmanager.org/productivity/read-rss-feeds-with-emacs-and-elfeed/">Read RSS feeds with Elfeed</a></li>
+<li><a href="https://lucidmanager.org/productivity/configure-emms/">Play Music with the Emacs Multimedia System</a></li>
+<li><a href="https://lucidmanager.org/productivity/emacs-chromebook/">Using Emacs on a Chromebook</a></li>
+</ol>
+<p>Emacs is a malleable system, so everybody will have their personal preferences to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

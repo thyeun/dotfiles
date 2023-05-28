@@ -1,0 +1,267 @@
+
+	
+<p>
+The <a href="https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/">Emacs package Org-Roam</a> provides a powerful tool to take notes following the idea of the Zettelkasten method. You can write notes with all the power that Emacs provides while linking your thoughts to each other and with your bibliography. This article shows how to analyse and visualise Org-Roam knowledge networks with the <a href="https://igraph.org/">iGraph package</a> and the R language.</p>
+<p>
+The image below shows the current state of my personal knowledge network as visualised by iGraph. The Org-Roam community is working hard to create a <a href="https://github.com/org-roam/org-roam-ui">visual user interface</a> for Org-Roam with network diagrams. While this user interface is a great tool to explore your network, Emacs users tend to prefer writing code instead of clicking buttons. This article adds to this concept by showing how to apply some mathematical analysis and delve deep into your Zettelkasten. The beauty of iGraph is that it is available in R, Python, Mathematica and C/C++.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/org-roam-network.png" alt="My personal Org-roam notes network" title="My personal Org-roam notes network"/>
+<figcaption>
+My personal Org-roam notes network.
+</figcaption>
+</figure>
+<p>
+You can download the code in this article from GitHub.</p>
+<p>
+<a href = "https://github.com/pprevos/digital-humanities" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Loading the Database
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>Org-Roam stores information about the notes in your system in an SQLite database. This database holds information about the nodes (registered files and headings) and links. The <a href="https://db.rstudio.com/r-packages/dbi/">DBI package</a> enables connecting to these databases.</p>
+<p>
+The first lines open the connection. You will have to change the path of the database location to your preferences for this to work. The two queries extract the unique ID and the title for all nodes. The second query extracts the links between nodes. The Org-Roam database also stores external links, which are excluded from this analysis.</p>
+<p>
+The next part cleans the titles by removing quotation marks and joins the tables. I could have done this in the query, but I know Tidyverse better than SQL.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Visualise Org-Roam databse</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">## Connect to database and extract nodes and links</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(DBI)
+</span></span><span style="display:flex;"><span>  roam <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">dbConnect</span>(RSQLite<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">SQLite</span>(), <span style="background-color:#fff0f0">&#34;~/.config/emacs/org-roam.db&#34;</span>)
+</span></span><span style="display:flex;"><span>  nodes <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">dbGetQuery</span>(roam, <span style="background-color:#fff0f0">&#34;SELECT id, title FROM nodes&#34;</span>)
+</span></span><span style="display:flex;"><span>  links <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">dbGetQuery</span>(roam, <span style="background-color:#fff0f0">&#34;SELECT source, dest FROM links WHERE type = &#39;\&#34;id\&#34;&#39;&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">dbDisconnect</span>(roam)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">## Clean node names and create network table</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(tidyverse)
+</span></span><span style="display:flex;"><span>  nodes <span style="color:#333">&lt;-</span> nodes <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">mutate</span>(title <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">str_remove_all</span>(title, <span style="background-color:#fff0f0">&#34;\&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  network <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">left_join</span>(links, nodes, by <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;source&#34;</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;id&#34;</span>)) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">left_join</span>(nodes, by <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;dest&#34;</span> <span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;id&#34;</span>)) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">select</span>(from <span style="color:#333">=</span> title.x, to <span style="color:#333">=</span> title.y)</span></span></code></pre></div>
+</div>
+<p>
+The result of this code is a data frame with two names of the nodes at each vertex in the network. Any unconnected nodes are ignored due to the left join. The next step is to convert this data to iGraph format and start visualising and analysing.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Create iGraph network
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>The iGraph package uses a specific data format. The <code class="verbatim">graph.data.frame()</code> function converts a data frame to an iGraph network. The <code class="verbatim">simplify()</code> function removes any multiple links and self-references. </p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Create network diagram</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(igraph)
+</span></span><span style="display:flex;"><span>  g <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">graph.data.frame</span>(network)
+</span></span><span style="display:flex;"><span>  g <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">simplify</span>(g)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Analyse the Network
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>The iGraph package has an extensive library of functions to analyse networks. In this section, we look at a measure for centrality and clustering. </p>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+Centrality
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>Not all nodes in the network are of equal importance. <a href="https://en.wikipedia.org/wiki/Centrality">Centrality</a> is a concept in graph theory that describes the importance of a node in a network. The most straightforward method of calculating the centrality of a node is to count the number of vertices (connections) that it has with other nodes. The example below shows a simple undirected graph and the degree of each node.</p>
+<figure>
+<a title="Melchoir (source); pan BMP, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:UndirectedDegrees_(Loop).svg"><img width="320" alt="UndirectedDegrees (Loop)" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/UndirectedDegrees_%28Loop%29.svg/320px-UndirectedDegrees_%28Loop%29.svg.png"></a>
+<figcaption>
+Example of the degree centrality of an undirected graph.
+</figcaption>
+</figure>
+<p>
+In a directed graph, like with Org-Roam, we can calculate the in-degree and out-degree, the number of vertices point <em>to</em> the node, or the number of vertices pointing <em>from</em> the node (the number of backlinks and the number of links). The <code class="verbatim">degree()</code> function of the iGraph package calculates degree centrality. The code below generates a table with the top ten most connected nodes.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Centrality</span>
+</span></span><span style="display:flex;"><span>  centrality <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">tibble</span>(Node <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">names</span>(<span style="color:#06b;font-weight:bold">degree</span>(g)),
+</span></span><span style="display:flex;"><span>                       Degree <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">degree</span>(g, mode <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;total&#34;</span>),
+</span></span><span style="display:flex;"><span>                       Links <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">degree</span>(g, mode <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;out&#34;</span>),
+</span></span><span style="display:flex;"><span>                       Backlinks <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">degree</span>(g, mode <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;in&#34;</span>)) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  centrality <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">top_n</span>(n <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">10</span>) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">arrange</span>(<span style="color:#06b;font-weight:bold">desc</span>(Degree))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+Communities
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>While some nodes might be more connected than others, it would also be good to know which nodes are closest to each other. In other words, can we find clusters of nodes (communities) to find meta-structure in the network? A community is a sub-network with densely connected nodes, but less so with nodes outside the community. Expressed probabilistically, two random nodes are more
+likely to be associated when they form part of the same community than when they don&#39;t. Thus, community detection increases the parsimony of the network by identifying those groups of nodes that are most closely related to each other.</p>
+<p>
+Using the example network, two communities can be visually distinguished: nodes 1–4 and nodes 5–7. Texts A, B and C belong to the first community, while texts C and D belong to the second community. Text C (nodes 2 and 5) spans the two communities of discourse. This solution is valid because each node has more connections to nodes within its own community than nodes outside it.</p>
+<figure>
+<img src="https://lucidmanager.org/images/digital-humanities/mix_example.communities.png" alt="Example of a network with two communities" title="Example of a network with two communities" width="320"/>
+<figcaption>
+Example of a network with two communities.
+</figcaption>
+</figure>
+<p>
+The examples&#39; communities are easily detected visually, but community detection becomes more difficult as the network grows. Community detection is a mathematical process to cluster nodes into cohesive sub-networks. </p>
+<p>
+Several algorithms for community detection have been developed based on a range of mathematical principles. However, the numerical validation of community structure has not yet been satisfactorily solved, and no agreed single method exists to assess the quality of communities. In my research into <a href="https://lucidmanager.org/data-science/discourse-network-analysis-literature-review/">knowledge networks</a>, the Spinglass algorithm provided the most interpretable results.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Community-detection</span>
+</span></span><span style="display:flex;"><span>  c <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">cluster_spinglass</span>(g)</span></span></code></pre></div>
+</div>
+<p>
+Note that clustering algorithms only work with complete graph, which means that all nodes are connected to each other by one or more steps. If you have multiple clusters and one or more single nodes, you can decompose the graph into its connected components and analyse each of these.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  g.comp <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">decompose</span>(g)
+</span></span><span style="display:flex;"><span>  largest <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">which.max</span>(<span style="color:#06b;font-weight:bold">sapply</span>(g.comp, diameter))
+</span></span><span style="display:flex;"><span>  g <span style="color:#333">&lt;-</span> g.comp[[largest]]
+</span></span><span style="display:flex;"><span>  c <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">cluster_spinglass</span>(g)</span></span></code></pre></div>
+</div>
+<p>
+This algorithm results in a named vector that assigns a number of each community to each node. Making sense of community structure requires some human interpretation because the algorithm does not analyse the texts, only the connections between them. Please note that clustering algorithms are computationally intensive and can take a while.</p>
+<p>
+We can assign a name to each community by using the node&#39;s name with the most backlinks within each community. The code below creates a table of the community memberships and joins it with the centrality table. The last part assigns a name to each community by selecting the node&#39;s name with the most backlinks, counts the number of members and arranges the table by community size.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  communities <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">tibble</span>(Node <span style="color:#333">=</span> c<span style="color:#333">$</span>names,
+</span></span><span style="display:flex;"><span>                        Community <span style="color:#333">=</span> c<span style="color:#333">$</span>membership) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">left_join</span>(centrality) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">group_by</span>(Community) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">summarise</span>(Name <span style="color:#333">=</span> Node<span style="color:#06b;font-weight:bold">[which.max</span>(Backlinks)],
+</span></span><span style="display:flex;"><span>              Nodes <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">n</span>()) <span style="color:#333">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">arrange</span>(<span style="color:#06b;font-weight:bold">desc</span>(Nodes))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-2">
+<h2 id="headline-6">
+Visualise Org-Roam
+</h2>
+<div id="outline-text-headline-6" class="outline-text-2">
+<p>Now that we have analysed the graph, it is time to visualise the results. iGraph has extensive <a href="https://igraph.org/r/doc/plot.common.html">plotting functionality</a> that gives full control over every aspect of the visualisation. To create the graph shown at the start of this article, use the following code:</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Visualise graph</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">par</span>(mar <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="color:#60e;font-weight:bold">0</span>, <span style="color:#60e;font-weight:bold">0</span>, <span style="color:#60e;font-weight:bold">0</span>, <span style="color:#60e;font-weight:bold">0</span>))
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">plot</span>(g,
+</span></span><span style="display:flex;"><span>       layout <span style="color:#333">=</span> layout.fruchterman.reingold,
+</span></span><span style="display:flex;"><span>       mark.border <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">NA</span>,
+</span></span><span style="display:flex;"><span>       vertex.color <span style="color:#333">=</span> c<span style="color:#333">$</span>membership,
+</span></span><span style="display:flex;"><span>       vertex.label <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">NA</span>,
+</span></span><span style="display:flex;"><span>       vertex.size <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">sqrt</span>(<span style="color:#06b;font-weight:bold">degree</span>(g, mode <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;in&#34;</span>) <span style="color:#333">+</span> <span style="color:#60e;font-weight:bold">1</span>),
+</span></span><span style="display:flex;"><span>       vertex.frame.color <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">NA</span>,
+</span></span><span style="display:flex;"><span>       edge.arrow.size <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">0</span>,
+</span></span><span style="display:flex;"><span>       edge.color <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;lightgrey&#34;</span>)</span></span></code></pre></div>
+</div>
+<p>
+The layout of graphs in this example follows the Fruchterman-Reingold method. This method tries to position the nodes so that the ones with the highest centrality are in the centre. Several other methods are available to compute an optimal layout.</p>
+<p>
+The colour of each node relates to its community. The node&#39;s size is the square root of the number of backlinks (indegree) plus one so that larger nodes don&#39;t overpower the picture and small nodes vanish. </p>
+<p>
+The remainder of the options improve the readability of the graph. This image is aesthetically pleasing, but it is not very informative. Adding text to the nodes would make it unreadable. </p>
+<div id="outline-container-headline-7" class="outline-3">
+<h3 id="headline-7">
+Subnetworks
+</h3>
+<div id="outline-text-headline-7" class="outline-text-3">
+<p>When a network is fairly large it might be more informative to visualise only a section. The code below determines the number of the relevant node. The <code class="verbatim">V()</code> function holds the properties of al vertices (the nodes) in the network. The <code class="verbatim">make_ego_graph()</code> subsets a network from a given node (ego) and the order. This function creates a list of networks as you can enter more than one node. </p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Subnetwork</span>
+</span></span><span style="display:flex;"><span>  node <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">which</span>(<span style="color:#06b;font-weight:bold">names</span>(<span style="color:#06b;font-weight:bold">V</span>(g)) <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;Topology&#34;</span>)
+</span></span><span style="display:flex;"><span>  g1 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">make_ego_graph</span>(g, order<span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">2</span>, nodes <span style="color:#333">=</span> node)
+</span></span><span style="display:flex;"><span>  c1 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">cluster_walktrap</span>(g1[[1]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">plot</span>(g1[[1]], layout <span style="color:#333">=</span> layout.kamada.kawai,
+</span></span><span style="display:flex;"><span>       mark.border <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">NA</span>,
+</span></span><span style="display:flex;"><span>       vertex.size <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">sqrt</span>(<span style="color:#06b;font-weight:bold">degree</span>(g1[[1]])) <span style="color:#333">+</span> <span style="color:#60e;font-weight:bold">2</span>,
+</span></span><span style="display:flex;"><span>       vertex.color <span style="color:#333">=</span> c1<span style="color:#333">$</span>membership,
+</span></span><span style="display:flex;"><span>       vertex.frame.color <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">NA</span>,
+</span></span><span style="display:flex;"><span>       vertex.label.family <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Sanserif&#34;</span>,
+</span></span><span style="display:flex;"><span>       vertex.label.color <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;black&#34;</span>,
+</span></span><span style="display:flex;"><span>       edge.arrow.size <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">.3</span>)</span></span></code></pre></div>
+</div>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/org-roam-subnetwork.png" alt="/images/emacs/org-roam-subnetwork.png" title="/images/emacs/org-roam-subnetwork.png" /><figcaption>
+Subnetwork example.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="outline-container-headline-8" class="outline-3">
+<h3 id="headline-8">
+Interactive visualisation
+</h3>
+<div id="outline-text-headline-8" class="outline-text-3">
+<p>The <a href="https://christophergandrud.github.io/networkD3/">networkD3 package</a> can create interactive graphs, as implemented in this code snippet. The first step converts the iGraph object to a D3 object. Then, the htmlwidgets package lets you save this object as an interactive HTML file.</p>
+<p>
+The code below adds the number of backlinks to the node table. Then, it defines the legend using the community names described above.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>  <span style="color:#888">## Interactive visualisation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(networkD3)
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">library</span>(htmlwidgets)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">## Convert to object suitable for networkD3</span>
+</span></span><span style="display:flex;"><span>  d3 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">igraph_to_networkD3</span>(g, group <span style="color:#333">=</span> communities<span style="color:#333">$</span>Name<span style="color:#06b;font-weight:bold">[membership</span>(c)])
+</span></span><span style="display:flex;"><span>  d3<span style="color:#333">$</span>nodes<span style="color:#333">$</span>backlinks <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">degree</span>(g, mode <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;in&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">## Create force directed network plot</span>
+</span></span><span style="display:flex;"><span>  p <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">forceNetwork</span>(Links <span style="color:#333">=</span> d3<span style="color:#333">$</span>links, Nodes <span style="color:#333">=</span> d3<span style="color:#333">$</span>nodes, 
+</span></span><span style="display:flex;"><span>                    Source <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;source&#34;</span>, Target <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;target&#34;</span>, 
+</span></span><span style="display:flex;"><span>                    NodeID <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;name&#34;</span>, Group <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;group&#34;</span>, 
+</span></span><span style="display:flex;"><span>                    Nodesize <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;backlinks&#34;</span>,
+</span></span><span style="display:flex;"><span>                    zoom <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>, legend <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#06b;font-weight:bold">saveWidget</span>(p, file<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">paste0</span>( <span style="color:#06b;font-weight:bold">getwd</span>(), <span style="background-color:#fff0f0">&#34;/org-roam.html&#34;</span>))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-2">
+<h2 id="headline-9">
+Further Analysis
+</h2>
+<div id="outline-text-headline-9" class="outline-text-2">
+<p>Graph theory is a broad field with lots of approaches to analyse graphs. This article only scathes the surface of what you can find out about your personal knowledge garden. Graph theory is a vital tool in many applications, including the fight against the Coronavirus.</p>
+<figure>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/lJHcg5rRAJQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<figcaption>
+Graph theory lectures by Anthony Bosman.
+</figcaption>
+</figure>
+<p>
+<a href = "https://www.r-bloggers.com/" target="_blank" title="Proudly associated with R-Bloggers">
+  <button class="button is-link is-medium">
+    <span class="icon is-large">
+      <i class="fab fa-r-project"></i>
+    </span>
+    <span>As seen on R Bloggers</span>
+  </button>
+</a>
+</p>
+</div>
+</div>
+
+      

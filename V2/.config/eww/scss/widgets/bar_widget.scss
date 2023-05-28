@@ -1,0 +1,76 @@
+@mixin system-indicators($orientation) {
+    @include button($flat: false, $radii: $panel_button_radius);
+    .reveal{
+        @if $orientation == 'v' { padding-top: .5em; }
+        @if $orientation == 'h' { padding-left: .2em;}
+    }
+    .slider{
+        @include slider($width: 0.5em, $slider: false);
+        @if $orientation == 'v' { > * { min-height: 80px; } }
+        @if $orientation == 'h' { > * { min-width: 90px; } }
+    }
+    .icon{
+        margin: .1em 0;
+        &.volume{
+            color: $teal;
+        }
+        &.bluetooth, &.bt_speaker{
+            color: $magenta;
+        }
+        &.mute{
+            color: $red;
+        }
+        &.screen{
+            color: $yellow;
+        }
+        &.battery{
+            &.low{ color: $destructive; }
+            &.charging{ color: $succes; }
+            &.charged{ color: $succes; }
+        }
+        &.notifications.active{
+            color: $orange;
+        }
+        &.network{
+            &.none, &.low{ color: $red; }
+            &.medium{ color: $blue; }
+            &.high{ color: $green; }
+        }
+    }
+}
+
+@mixin panel_media() {
+    .player{
+        @include button($flat: true, $radii: $panel_button_radius);
+    }
+    .controls{
+        @include button($radii: $panel_button_radius);
+        button {
+            &.prev, &.next, &.play-pause{
+                color: transparentize($fg_color, 0.3);
+                &:hover{ color: transparentize($fg_color, 0.15) }
+                &:active{ color: $fg_color }
+            }
+        }
+    }
+    .icon{
+        &.vlc{ color: $yellow; }
+        &.spotify{ color: $green; }
+        &.firefox{ color: $orange; }
+        &.mpv{ color: $magenta; }
+    }
+}
+
+@mixin workspaces() {
+    @include button($flat: false, $radii: $panel_button_radius);
+    .workspace-btn{
+        &.empty{ color: transparentize($fg_color, 0.34); }
+        &.occupied{ color: transparentize($fg_color, 0.18); }
+        &.active{ color: $fg_color; }
+        &:hover{
+            &.empty{ color: transparentize($fg_color, 0.18); }
+            &.occupied{ color: $fg_color; }
+        }
+        &:active{ color: $accent; }
+    }
+}

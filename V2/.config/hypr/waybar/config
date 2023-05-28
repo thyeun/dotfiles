@@ -1,0 +1,19 @@
+{
+  "include": "~/.config/hypr/waybar/modules",
+  "layer": "top",
+  //"mode": "dock",
+  "exclusive": true,
+  "passthrough": false,
+  "position": "bottom",
+  "spacing": 5,
+  "fixed-center": true,
+  "ipc": true,
+  "margin-left": 0,
+  "margin-right": 0,
+
+  //"modules-left": ["wlr/workspaces", "cpu", "memory", "disk"],
+  "modules-left": ["custom/menu", "wlr/workspaces"],
+  "modules-center": ["custom/cava-internal"],
+  //"modules-right": ["custom/cycle_wall","custom/updater", "pulseaudio", "custom/keybindings", "clock", "tray", "custom/power"],
+  "modules-right": ["custom/recorder", "network", "custom/cycle_wall","custom/updater", "pulseaudio", "clock", "custom/power"],
+}

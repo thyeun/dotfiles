@@ -1,0 +1,145 @@
+
+	
+<p>
+I started my first website in 1996 with hand-written HTML. That became a bit of a chore, so about fifteen years, WordPress became my friend. I recently returned to a static website using <a href="https://gohugo.io/">Hugo</a>. I tried the <a href="https://github.com/SchumacherFM/wordpress-to-hugo-exporter/">WordPress to Hugo exporter</a>, but a lot of HTML artefacts were left in the Markdown output, and each file was in a separate folder. This article explains how to export a WordPress blog to Hugo and customise it with R code.</p>
+<p>
+WordPress has been great to me, but it is slowly becoming a pain to keep updating plugins, security issues, slow performance and the annoying block editor. I am also always looking for additional activities I can do with Emacs. Hugo takes a lot of the pain of managing site away as you can focus on the content. <a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">Emacs provides me with powerful editing functionality</a>.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Convert the content to Markdown or Org Mode
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>The first step is to export the WordPress posts database to a CSV file. Several plugins are available that help you with this task. Alternatively, you can <a href="https://lucidmanager.org/data-science/analyse-site-structure/">link directly to the database</a> and extract the data with the RMySQL package. I have used the <a href="https://wordpress.org/plugins/wp-all-export/">WP All Export plugin</a> to export the data. We need at least the following fields:</p>
+<ul>
+<li>Title</li>
+<li>Slug</li>
+<li>Date</li>
+<li>Content</li>
+<li>Categories</li>
+<li>Tags</li>
+</ul>
+<p>The content files for Hugo are either Markdown or Org Mode. I prefer to use Org Mode as it provides me with access to the extensive functionality that Emacs has to offer, including <a href="https://opensource.com/article/20/5/r-emacs-data-science">writing and evaluating R code</a>. Org Mode is comparable to RMarkdown. You can write and execute code snippets in Org Mode, just like in RMarkdown. Org-Mode has other advantages because it also has a fully-featured task and project management system. This software also has superior editing options compared to anything that RStudio has to offer. In this code, you set your preferred file type with the export variable.</p>
+<figure>
+<img src="https://lucidmanager.org/images/digital-humanities/emacs-ess.jpg" alt="Screenshot of Emacs with R through the Emacs Speaks Statistics package" title="Screenshot of Emacs with R through the Emacs Speaks Statistics package"/>
+<figcaption>
+Screenshot of Emacs with R through the Emacs Speaks Statistics package.
+</figcaption>
+</figure>
+<p>
+The <code class="verbatim">Content</code> field in the WordPress database contains HTML code. The code below reads the exported CSV file and saves each content field as an HTML file. The mighty Pandoc software undertakes the conversion from HTML to Org Mode or Markdown, depending on the <code class="verbatim">export</code> variable, using the post slug as the file name. Any draft posts or pages in the export file will have <code class="verbatim">NA</code> as the file name.</p>
+<p>
+<a href = "https://github.com/pprevos/digital-humanities/tree/master/wp-hugo" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#888">## Export WP to Hugo</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">## Read exported WP content</span>
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">library</span>(tibble)
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">library</span>(readr)
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">library</span>(dplyr)
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">library</span>(stringr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>posts <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">read_csv</span>(<span style="background-color:#fff0f0">&#34;Posts-Export-2020-July-17-2245.csv&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">## Convert to Org Mode or Markdown</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#333">&lt;-</span> <span style="background-color:#fff0f0">&#34;.org&#34;</span> <span style="color:#888"># &#34;.org&#34; or &#34;.md&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">for </span>(i in <span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span><span style="color:#06b;font-weight:bold">nrow</span>(posts)) {
+</span></span><span style="display:flex;"><span>    filename <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste0</span>(posts<span style="color:#333">$</span>Slug[i], <span style="background-color:#fff0f0">&#34;.html&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">writeLines</span>(posts<span style="color:#333">$</span>Content[i], filename)
+</span></span><span style="display:flex;"><span>    pandoc <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#34;pandoc -o content/post/&#34;</span>, posts<span style="color:#333">$</span>Slug[i], export, <span style="background-color:#fff0f0">&#34; &#34;</span>, filename)
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">system</span>(pandoc)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">## Clean folder</span>
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">file.remove</span>(<span style="color:#06b;font-weight:bold">list.files</span>(pattern <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;*.html&#34;</span>))</span></span></code></pre></div>
+</div>
+<p>
+The next step is to add the front matter for Hugo. The front matter for this export will contain the title, date and the original URL so that we can create a redirect to the new address.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Export WordPress to Hugo site
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>Now that we have some content, we need to provide the context in the front matter so that Hugo can build a site. Hugo knows several types of <a href="https://gohugo.io/content-management/front-matter/">front matter</a>, i.e. TOML, YAML, JSON and Org-Mode. This code provides either org Mode or TOML front matter for markdown files, depending on how you set the <code class="verbatim">export</code> variable.</p>
+<div class="src src-r">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#888">## Create Org Mode files</span>
+</span></span><span style="display:flex;"><span>baseurl <span style="color:#333">&lt;-</span> <span style="background-color:#fff0f0">&#34;https://lucidmanager.org&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">## Create front matter</span>
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">if</span>(export <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;.org&#34;</span>) {
+</span></span><span style="display:flex;"><span>    fm <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">tibble</span>(title <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;#+title:&#34;</span>, posts<span style="color:#333">$</span>Title),
+</span></span><span style="display:flex;"><span>                 date <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;#+date:&#34;</span>, <span style="color:#06b;font-weight:bold">as.POSIXct</span>(posts<span style="color:#333">$</span>Date, origin <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;1970-01-01&#34;</span>)),
+</span></span><span style="display:flex;"><span>                 lastmod <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;#+lastmod:&#34;</span>, <span style="color:#06b;font-weight:bold">Sys.Date</span>()),
+</span></span><span style="display:flex;"><span>                 categories <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;#+categories[]:&#34;</span>, <span style="color:#06b;font-weight:bold">str_replace_all</span>(posts<span style="color:#333">$</span>Categories, <span style="background-color:#fff0f0">&#34; &#34;</span>, <span style="background-color:#fff0f0">&#34;-&#34;</span>)),
+</span></span><span style="display:flex;"><span>                 tags <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste</span>(<span style="background-color:#fff0f0">&#34;#+tags[]:&#34;</span>, <span style="color:#06b;font-weight:bold">str_replace_all</span>(posts<span style="color:#333">$</span>Tags, <span style="background-color:#fff0f0">&#34; &#34;</span>, <span style="background-color:#fff0f0">&#34;-&#34;</span>)),
+</span></span><span style="display:flex;"><span>                 draft <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;#+draft: true&#34;</span>) <span style="color:#333">%&gt;%</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#06b;font-weight:bold">mutate</span>(categories <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(categories, <span style="background-color:#fff0f0">&#34;\\|&#34;</span>, <span style="background-color:#fff0f0">&#34; &#34;</span>),
+</span></span><span style="display:flex;"><span>               tags <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(tags, <span style="background-color:#fff0f0">&#34;\\|&#34;</span>, <span style="background-color:#fff0f0">&#34; &#34;</span>))
+</span></span><span style="display:flex;"><span>} else {
+</span></span><span style="display:flex;"><span>    fm <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">tibble</span>(opening <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;+++&#34;</span>,
+</span></span><span style="display:flex;"><span>                 title <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#39;title = &#34;&#39;</span>, posts<span style="color:#333">$</span>Title, <span style="background-color:#fff0f0">&#39;&#34;&#39;</span>),
+</span></span><span style="display:flex;"><span>                 date <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#39;date = &#34;&#39;</span>, <span style="color:#06b;font-weight:bold">as.POSIXct</span>(posts<span style="color:#333">$</span>Date, origin <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;1970-01-01&#34;</span>), <span style="background-color:#fff0f0">&#39;&#34;&#39;</span>),
+</span></span><span style="display:flex;"><span>                 lastmod <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#39;lastmod = &#34;&#39;</span>, <span style="color:#06b;font-weight:bold">Sys.Date</span>(), <span style="background-color:#fff0f0">&#39;&#34;&#39;</span>),
+</span></span><span style="display:flex;"><span>                 categories <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#39;categories = [&#34;&#39;</span>, posts<span style="color:#333">$</span>Categories, <span style="background-color:#fff0f0">&#39;&#34;]&#39;</span>),
+</span></span><span style="display:flex;"><span>                 tags <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#39;tags = [&#34;&#39;</span>, posts<span style="color:#333">$</span>Tags, <span style="background-color:#fff0f0">&#39;&#34;]&#39;</span>),
+</span></span><span style="display:flex;"><span>                 draft <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;draft = &#34;true&#34;&#39;</span>,
+</span></span><span style="display:flex;"><span>                 close <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;+++&#34;</span>) <span style="color:#333">%&gt;%</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#06b;font-weight:bold">mutate</span>(categories <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(categories, <span style="background-color:#fff0f0">&#34;\\|&#34;</span>, <span style="background-color:#fff0f0">&#39;&#34;, &#34;&#39;</span>),
+</span></span><span style="display:flex;"><span>               tags <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(tags, <span style="background-color:#fff0f0">&#34;\\|&#34;</span>, <span style="background-color:#fff0f0">&#39;&#34;, &#34;&#39;</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">## Load Hugo files an append front matter</span>
+</span></span><span style="display:flex;"><span><span style="color:#06b;font-weight:bold">for </span>(f in <span style="color:#60e;font-weight:bold">1</span><span style="color:#333">:</span><span style="color:#06b;font-weight:bold">nrow</span>(posts)) {
+</span></span><span style="display:flex;"><span>    filename <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">paste0</span>(<span style="background-color:#fff0f0">&#34;content/post/&#34;</span>, posts<span style="color:#333">$</span>Slug[f], export)
+</span></span><span style="display:flex;"><span>    post <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="color:#06b;font-weight:bold">paste</span>(fm[f, ]), <span style="background-color:#fff0f0">&#34;&#34;</span>, <span style="color:#06b;font-weight:bold">readLines</span>(filename))
+</span></span><span style="display:flex;"><span>    <span style="color:#888">## Repoint images</span>
+</span></span><span style="display:flex;"><span>    post <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(post, <span style="color:#06b;font-weight:bold">paste0</span>(baseurl, <span style="background-color:#fff0f0">&#34;/wp-content&#34;</span>), <span style="background-color:#fff0f0">&#34;/images&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#888">## R Code highlighting</span>
+</span></span><span style="display:flex;"><span>    post <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">str_replace_all</span>(post, <span style="background-color:#fff0f0">&#34;``` \\{.*&#34;</span>, <span style="background-color:#fff0f0">&#34;<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-R" data-lang="R"><span style="display:flex;"><span><span style="background-color:#fff0f0">&#34;)
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    post &lt;- str_replace_all(post, &#34;</span>```<span style="background-color:#fff0f0">&#34;, &#34;</span></span></span></code></pre></div>&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#888">## Remove remaining Wordpress artefacts</span>
+</span></span><span style="display:flex;"><span>    post <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">str_remove_all</span>(post, <span style="background-color:#fff0f0">&#39;:::|\\{.wp.*|.*\\&#34;\\}&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#888">## Write to disk</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#06b;font-weight:bold">writeLines</span>(post , filename)
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Finalising and Publishing the new site
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>All you have to do now is to add a theme to your website, and your blog is fully converted. The Hugo website has a great <a href="https://gohugo.io/getting-started/quick-start/">Quick Start</a> page that will get you going.</p>
+<p>
+You can create new posts and edit your content with your favourite text editor. I use <a href="https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/">Org mode in Emacs to develop this website</a>.</p>
+<p>
+If you prefer R-markdown, then you can easily modify this code so you can use RStudio and the <a href="https://bookdown.org/yihui/blogdown/">blogdown</a> package.</p>
+<p>
+This new site will not be perfect just yet. To show the images, you need to download your <code class="verbatim">wp-content</code> folder and move it to the <code class="verbatim">static/images</code> folder in Hugo. You will also need to change the permalink settings to ensure that no URL changes when you migrate your blog. There will be other bits and pieces that might not have adequately converted, so do check your pages. </p>
+<p>
+<a href = "https://www.r-bloggers.com/" target="_blank" title="Proudly associated with R-Bloggers">
+  <button class="button is-link is-medium">
+    <span class="icon is-large">
+      <i class="fab fa-r-project"></i>
+    </span>
+    <span>As seen on R Bloggers</span>
+  </button>
+</a>
+</p>
+</div>
+</div>
+
+      

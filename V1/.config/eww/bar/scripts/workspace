@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# get workspace widget for eww
+workspaces() {
+
+# Don't change this
+ws1=1
+ws2=2
+ws3=3
+ws4=4
+ws5=5
+ws6=6
+ws7=7
+ws8=8
+ws9=9
+
+works1="unoccupied"
+works2="unoccupied"
+works3="unoccupied"
+works4="unoccupied"
+works5="unoccupied"
+works6="unoccupied"
+works7="unoccupied"
+works8="unoccupied"
+works9="unoccupied"
+
+# This is the list of occupied windows. 
+list=$(i3-msg -t get_workspaces | jq '.[] | select(.visible==false).name' | cut -d"\"" -f2  2>/dev/null)
+
+[[ "$list" == *"1"* ]] && works1="occupied"
+[[ "$list" == *"2"* ]] && works2="occupied"
+[[ "$list" == *"3"* ]] && works3="occupied"
+[[ "$list" == *"4"* ]] && works4="occupied"
+[[ "$list" == *"5"* ]] && works5="occupied"
+[[ "$list" == *"6"* ]] && works6="occupied"
+[[ "$list" == *"7"* ]] && works7="occupied"
+[[ "$list" == *"8"* ]] && works8="occupied"
+[[ "$list" == *"9"* ]] && works9="occupied"
+
+# this is the list of focused windows
+focused=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name'  | cut -d"\"" -f2 2>/dev/null)
+
+# there can be only one focused window so no need of glob matching
+[ "$focused" = 1 ] && works1="focused"
+[ "$focused" = 2 ] && works2="focused"
+[ "$focused" = 3 ] && works3="focused"
+[ "$focused" = 4 ] && works4="focused"
+[ "$focused" = 5 ] && works5="focused"
+[ "$focused" = 6 ] && works6="focused"
+[ "$focused" = 7 ] && works7="focused"
+[ "$focused" = 8 ] && works8="focused"
+[ "$focused" = 9 ] && works9="focused"
+
+# I've not tested this, so I'm not sure if this works
+urgent=$(i3-msg -t get_workspaces | jq '.[] | select(.urgent==true).name'  | cut -d"\"" -f2 2>/dev/null)
+
+[[ "$urgent" == *"1"* ]] && works1="urgent"
+[[ "$urgent" == *"2"* ]] && works2="urgent"
+[[ "$urgent" == *"3"* ]] && works3="urgent"
+[[ "$urgent" == *"4"* ]] && works4="urgent"
+[[ "$urgent" == *"5"* ]] && works5="urgent"
+[[ "$urgent" == *"6"* ]] && works6="urgent"
+[[ "$urgent" == *"7"* ]] && works7="urgent"
+[[ "$urgent" == *"8"* ]] && works8="urgent"
+[[ "$urgent" == *"9"* ]] && works9="urgent"
+
+  echo "(box	:class \"works\" \
+				:orientation \"h\" \
+				:halign \"center\" \
+				:space-evenly \"false\" \
+				:spacing \"12\" \
+		(button :onclick \"i3-msg 'workspace $ws1'\" \
+				:class \"$works1\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws2'\" \
+				:class \"$works2\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws3'\" \
+				:class \"$works3\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws4'\" \
+				:class \"$works4\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws5'\" \
+				:class \"$works5\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws6'\" \
+				:class \"$works6\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws7'\" \
+				:class \"$works7\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws8'\" \
+				:class \"$works8\"\"\") \
+		(button :onclick \"i3-msg 'workspace $ws9'\" \
+				:class \"$works9\"\"\"))"
+}
+
+workspaces
+i3-msg -t subscribe -m '["window", "workspace"]' | while read -r _ ; do
+workspaces
+done

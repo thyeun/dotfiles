@@ -1,0 +1,131 @@
+
+	
+<p>
+Even with the advent of speech-to-text software, the keyboard is still the most common method to convert thoughts to text. While converting spoken word to text is improving by the day and might even be extended to read our minds, there is something to be said about using your fingers to do the talking. Who would want their ’ums’ and ’ahs’ written down or their uncensored stream of consciousness committed to text? Writing is as much about thinking and crafting words as it is about maximising keystrokes per minute.</p>
+<p>
+Completion systems are like predictive text on a mobile phone. You start typing some characters and the computer lets you complete your choice. Emacs comes equipped with an extendable completion system that helps you complete long words, find files, remember function names and other menial tasks. This article explains the basic completion engine and some of the packages that extend this functionality.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of the previous articles.</p>
+<p>
+Emacs has two types of <a href="https://www.emacswiki.org/emacs/Completion">completion systems</a>:</p>
+<ol>
+<li><em>Input Completion</em> assists with picking choices in the minibuffer, such as function names, files and other selections.</li>
+<li><em>Text completion</em> helps you complete words that you type in the buffer.</li>
+</ol>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Input Completion
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>The <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion.html">standard completion system</a> focuses on entering functions, filenames, buffer names and any other selection process in the minibuffer. When you start typing a function or file name, you hit the <code class="verbatim">TAB</code> key and Emacs will show display completion candidates in a popup buffer at the bottom of the screen.</p>
+<p>
+For example, to evaluate the <code class="verbatim">visual-line-mode</code> function to change the way Emacs displays paragraphs, you type <code class="verbatim">M-x visu</code> and <code class="verbatim">TAB</code>. If you hit <code class="verbatim">TAB</code> after each letter, you&#39;ll notice that Emacs narrows the completion candidates.</p>
+<p>
+This principle also works with variable names and filenames. As you start looking for a filename, use the <code class="verbatim">TAB</code> key to prevent having to type the full filename.</p>
+<p>
+The completion system is highly configurable and several packages extend this functionality.</p>
+<div id="outline-container-headline-2" class="outline-3">
+<h3 id="headline-2">
+Helm
+</h3>
+<div id="outline-text-headline-2" class="outline-text-3">
+<p>The <a href="https://emacs-helm.github.io/helm/">Helm package</a> provides a steering wheel to help you manoeuvre through the minibuffer. After you start using this package, you will never want to go back to the old way of selecting things.</p>
+<p>
+Helm as a lot of options to replace standard Emacs functionality with its own version. Finding files, open buffers or anything else will be a breeze.</p>
+<p>
+Helm is an incremental completion system, which means that it narrows the available options as you provide more information about what you seek.</p>
+<p>
+With Helm you can start any character sequence to find a file or anything else. Helm also supports multi pattern matching. You can use a pattern like “foo bar” to match a line containing “foo” and “bar” in any order. Advanced users can use regular expressions to narrow searching.</p>
+<p>
+The following code snippet provides a basic configuration for Helm. The lines under <code class="verbatim">:bind</code> redefine common Emacs shortcuts to replace them with the relevant Helm versions. Try these keyboard shortcuts and convince yourself that Helm truly gives you a steering wheel for Emacs.</p>
+<p>
+You will also need to install use-package, which is explained in the article on how to <a href="https://lucidmanager.org/productivity/configure-emacs/">configure Emacs</a>.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span><span style="color:#888">;; Helm configuration</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">helm</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">require</span> <span style="color:#a60;background-color:#fff0f0">&#39;helm-config</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:init</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">helm-mode</span> <span style="color:#00d;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:bind</span>
+</span></span><span style="display:flex;"><span>    ((<span style="background-color:#fff0f0">&#34;M-x&#34;</span>     <span style="color:#333">.</span> <span style="color:#963">helm-M-x</span>) <span style="color:#888">;; Evaluate functions</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-x C-f&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-find-files</span>) <span style="color:#888">;; Open or create files</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-x b&#34;</span>   <span style="color:#333">.</span> <span style="color:#963">helm-mini</span>) <span style="color:#888">;; Select buffers</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-x C-r&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-recentf</span>) <span style="color:#888">;; Select recently saved files</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-c i&#34;</span>   <span style="color:#333">.</span> <span style="color:#963">helm-imenu</span>) <span style="color:#888">;; Select document heading</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;M-y&#34;</span>     <span style="color:#333">.</span> <span style="color:#963">helm-show-kill-ring</span>) <span style="color:#888">;; Show the kill ring</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#007020">:map</span> <span style="color:#963">helm-map</span>
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;C-z&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-select-action</span>)
+</span></span><span style="display:flex;"><span>     (<span style="background-color:#fff0f0">&#34;&lt;tab&gt;&#34;</span> <span style="color:#333">.</span> <span style="color:#963">helm-execute-persistent-action</span>)))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-3">
+<h3 id="headline-3">
+Help with Keyboard Shortcuts
+</h3>
+<div id="outline-text-headline-3" class="outline-text-3">
+<p>The <a href="https://github.com/justbur/emacs-which-key#introduction">which-key</a> package is not so much a completion system, but a great help when trying to remember which keyboard shortcut to use. This package provides a minor mode that displays the key bindings following the currently-entered incomplete command (a prefix) in a popup.</p>
+<p>
+Many keyboard shortcuts have multiple parts, such as <code class="verbatim">C-x C-f</code>. The which-key package shows a popup menu that lists all the available options. When, for example, you press <code class="verbatim">C-x</code>, the menu will list all follow-up keys and the function they are bound to. Where it says <code class="verbatim">prefix</code> in the popup, this means that there is a deeper level.</p>
+<p>
+The configuration below displays the popup at the bottom of the screen, half a second after you type the partial keyboard shortcut. </p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">which-key</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">which-key-mode</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">which-key-idle-delay</span> <span style="color:#60e;font-weight:bold">0.5</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">which-key-idle-secondary-delay</span> <span style="color:#60e;font-weight:bold">0.5</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#963">which-key-setup-side-window-bottom</span>))</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-2">
+<h2 id="headline-4">
+Text Completion
+</h2>
+<div id="outline-text-headline-4" class="outline-text-2">
+<p>Emacs developers have also written a large variety of completion systems to help you write text. These packages fall into two categories: expansion systems for prose and for code. This article focus on tools to help you write more efficient prose.</p>
+<p>
+Expanding text in human languages comes in two forms. You either start typing a word and Emacs predicts what should come next, or you write a predefined abbreviation that expands into a word, a paragraph, a table or whatever else you define it as.</p>
+<p>
+Predictive text is one of these technologies that can be both a blessing and a curse. Use it with caution because it can hinder your writing when used to eagerly.</p>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+Company Mode
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>Company mode is a versatile package that can help you with completing long words. Its main purpose is to assist developers with writing code, but it can also help you complete words.</p>
+<p>
+Whenever you type a defined number of characters, Company will provide suggested completions in a dropdown menu. It derives these options from all open text buffers. Use the arrow keys and enter to select your option or simply ignore the menu and keep typing.</p>
+<p>
+This basic configuration sets the delay at 0 seconds and the minimum number of characters before it suggests completions when you type four characters. The wraparound option lets you cycle through the completions menu with the down and up arrow keys.</p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Auto completion</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#007020">use-package</span> <span style="color:#963">company</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">:config</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#007020">setq</span> <span style="color:#963">company-idle-delay</span> <span style="color:#00d;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">company-minimum-prefix-length</span> <span style="color:#00d;font-weight:bold">4</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#963">company-selection-wrap-around</span> <span style="color:#036;font-weight:bold">t</span>))
+</span></span><span style="display:flex;"><span>  (<span style="color:#963">global-company-mode</span>)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-2">
+<h2 id="headline-6">
+Emacs Completion System
+</h2>
+<div id="outline-text-headline-6" class="outline-text-2">
+<p>This article is only a brief introduction into the Emacs completion system. Many other packages are available with a slight different approach to completions. This general setup will make it easier to find files and so on and to complete long words.</p>
+<p>
+Now that we have completed all basic configuration and created a writing environment, it is time to start writing. The next article shows how to use Emacs Org mode to a <a href="https://lucidmanager.org/productivity/emacs-for-distraction-free-writing/">distraction-free writing environment</a>.</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences of how to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

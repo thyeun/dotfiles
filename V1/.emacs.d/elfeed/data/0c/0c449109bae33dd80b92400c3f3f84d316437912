@@ -1,0 +1,90 @@
+
+	
+<p>
+One of the main advantages of free software is that it runs on almost any platform. Google&#39;s Chromebooks are somewhat of an exception because of its restricted application access. Emacs is not available as an application within the app store. However, the foundations of Google&#39;s Chromebook are Linux, which makes it an ideal platform to use Emacs. Although Emacs does not run natively on a Chromebook, there is an elegant solution to this problem.</p>
+<p>
+Installing Emacs on a Chromebook is like a three-course meal. You start with a Crouton or some Crostini as an appetiser, install Emacs as the main course, and some configuration as the desert. This article explains how to install Emacs on your Chromebook laptop.</p>
+<p>
+This article is part of a series on how to use <a href="https://lucidmanager.org/productivity/more-productive-with-emacs/">Emacs to become more productive</a>. If you are new to Emacs, then feel free to read any of these articles.</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Linux on a Chromebook
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>Several open-source projects developed over the years enable running Linux on a Chromebook. <a href="https://chromebook.guide/crouton/">Crouton</a> (not to be confused with the bread sticks) installs a GNU/Linux operating system, such as Ubuntu, on your Chromebook. Linux will live side-by-side with Chrome OS and you can switch between the two with a keyboard shortcut without rebooting.</p>
+<p>
+More recently, Google introduced a new Linux subsystem called  <a href="https://chromeos.dev/en/linux">Crostini</a>, for its Chrome OS  so that you can use all the great software it offers, including the venerable Emacs. Crostini is a play on words as it is a fancy version of a crouton. With Crostini, your Linux terminal is an application within the Chrome OS. </p>
+<p>
+Click on the clock and select the settings icon. Scroll down to the Linux section and follow the prompts. Not all Chromebooks support this method yet. If your Chromebook does not include Crostini, then you&#39;ll have to use Crouton instead. Crostini is still beta software and some functionality, such as USB, might not be fully functional.</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+Install Emacs
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>Once you have access to either Crouton or Crostini, you can install Emacs in the usual way. Crostini uses a stable version of Debian, with Emacs 25 as the most recent version. Start the Linux terminal and type:</p>
+<div class="src src-shell">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo apt-get install emacs25</span></span></code></pre></div>
+</div>
+<p>
+Emacs will now be accessible from Chrome OS, without needing the terminal. You can start it just like any other Chrome software.</p>
+<figure>
+<img src="https://lucidmanager.org/images/emacs/emacs-chromebook-screen.jpg" alt="/images/emacs/emacs-chromebook-screen.jpg" title="Writing this acticle with Emacs on the Chromebook"/>
+<figcaption>
+Writing this acticle with Emacs on the Chromebook.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+Using Emacs with Crouton
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>The Linux system is a virtual machine within Chrome and has a separate file system. Files within the Linux container are available by default from the file browser. The user&#39;s Linux home folder is a folder within the Chromebook&#39;s file system.</p>
+<p>
+If you want to access the Chrome file system within Emacs, you will need to share the Chrome folder with Linux. Right-click on any folder in the Chrome file browser and select &#34;Share with Linux&#34;. The shared folders are available in <code class="verbatim">/mnt/chromeos/MyFiles/</code> in the Linux container.</p>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-2">
+<h2 id="headline-4">
+Chromebook keybindings
+</h2>
+<div id="outline-text-headline-4" class="outline-text-2">
+<p>The keyboard on Chromebooks is a bit different from the normal PC or Apple. The top-row arrow keys are by default bound to <code class="verbatim">next-buffer</code> and <code class="verbatim">previous-buffer</code> functions. The <code class="verbatim">ALT</code> and up/down arrow keys map to page-up and page-down, which is annoying when you use Org mode.</p>
+<p>
+The code below restores the behaviour of <code class="verbatim">M-up</code> and <code class="verbatim">M-down</code> in Org mode. When you use this keybinding, you will have to use <code class="verbatim">M-v</code> and <code class="verbatim">C-v</code> for scrolling while in Org mode. </p>
+<div class="src src-emacs-lisp">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-emacs-lisp" data-lang="emacs-lisp"><span style="display:flex;"><span>  <span style="color:#888">;; Chromebook shortcuts</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#06b;font-weight:bold">define-key</span> <span style="color:#963">org-mode-map</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;&lt;prior&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;org-metaup</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#06b;font-weight:bold">define-key</span> <span style="color:#963">org-mode-map</span> (<span style="color:#963">kbd</span> <span style="background-color:#fff0f0">&#34;&lt;next&gt;&#34;</span>) <span style="color:#a60;background-color:#fff0f0">&#39;org-metadown</span>)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-2">
+<h2 id="headline-5">
+Chromebook Emacs as a writing companion
+</h2>
+<div id="outline-text-headline-5" class="outline-text-2">
+<p>Emacs is the ideal software for a Chromebook. They are cheap lightweight computers that are perfect for writing on the go. Emacs provides the perfect <a href="https://lucidmanager.org/productivity/emacs-for-distraction-free-writing/">distraction-free writing environment</a> for anyone who writes as a professional activity or creative outlet.</p>
+<p>
+You can download a configuration file focused on content creators from my GitHub page.</p>
+<p>
+<a href = "https://github.com/pprevos/EmacsLife" target="_blank"
+   title="Download the code from GitHub"
+   alt="Download the code from GitHub">
+  <button class="button is-medium is-primary">
+    <span class="icon is-large">
+      <i class="fab fa-github"></i>
+    </span>
+    <span>Download from GitHub</span>
+  </button>
+</a>
+</p>
+<p>
+Emacs is a malleable system, so everybody will have their personal preferences of how to undertake a task. Any article on how to be productive with Emacs is thus opinionated. If you have a different way of doing things, please share your views and leave a comment below, or complete the <a href="https://lucidmanager.org/contact/">contact form</a> to send me an email.</p>
+</div>
+</div>
+
+      

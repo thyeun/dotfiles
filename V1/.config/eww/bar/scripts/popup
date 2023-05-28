@@ -1,0 +1,91 @@
+#!/bin/sh
+
+calendar(){
+LOCK_FILE_CAL="$HOME/.cache/eww-calendar.lock"
+EWW_BIN="$HOME/.local/bin/eww"
+
+run() {
+    ${EWW_BIN} -c $HOME/.config/eww/bar open calendar
+}
+
+# Open widgets
+if [[ ! -f "$LOCK_FILE_CAL" ]]; then
+    ${EWW_BIN} -c $HOME/.config/eww/bar close calendar
+    touch "$LOCK_FILE_CAL"
+    run
+else
+    ${EWW_BIN} -c $HOME/.config/eww/bar close calendar
+    rm "$LOCK_FILE_CAL"
+fi
+}
+
+audio() {
+LOCK_FILE_AUDIO="$HOME/.cache/eww-audio.lock"
+EWW_BIN="$HOME/.local/bin/eww"
+
+run() {
+    ${EWW_BIN} -c $HOME/.config/eww/bar open audio_ctl 
+}
+
+# Open widgets
+if [[ ! -f "$LOCK_FILE_AUDIO" ]]; then
+    ${EWW_BIN} -c $HOME/.config/eww/bar close audio_ctl
+    touch "$LOCK_FILE_AUDIO"
+    run 
+else
+    ${EWW_BIN} -c $HOME/.config/eww/bar close audio_ctl
+    rm "$LOCK_FILE_AUDIO" 
+fi
+}
+
+light() {
+LOCK_FILE_LIGHT="$HOME/.cache/eww-light.lock"
+EWW_BIN="$HOME/.local/bin/eww"
+
+run() {
+    ${EWW_BIN} -c $HOME/.config/eww/bar open light_ctl 
+}
+
+# Open widgets
+if [[ ! -f "$LOCK_FILE_LIGHT" ]]; then
+    ${EWW_BIN} -c $HOME/.config/eww/bar close light_ctl
+    touch "$LOCK_FILE_LIGHT"
+    run 
+else
+    ${EWW_BIN} -c $HOME/.config/eww/bar close light_ctl
+    rm "$LOCK_FILE_LIGHT" 
+fi
+}
+
+music() {
+LOCK_FILE_SONG="$HOME/.cache/eww-song.lock"
+EWW_BIN="$HOME/.local/bin/eww"
+
+run() {
+    ${EWW_BIN} -c $HOME/.config/eww/bar open music_win 
+}
+
+# Open widgets
+if [[ ! -f "$LOCK_FILE_SONG" ]]; then
+    ${EWW_BIN} -c $HOME/.config/eww/bar close system calendar
+    touch "$LOCK_FILE_SONG"
+    run 
+else
+    ${EWW_BIN} -c $HOME/.config/eww/bar close music_win
+    rm "$LOCK_FILE_SONG" 
+fi
+}
+
+if [ "$1" = "launcher" ]; then
+def-dmenu
+elif [ "$1" = "wifi" ]; then
+def-nmdmenu
+elif [ "$1" = "light" ]; then
+light
+elif [ "$1" = "audio" ]; then
+audio
+elif [ "$1" = "music" ]; then
+music
+elif [ "$1" = "calendar" ]; then
+calendar
+fi

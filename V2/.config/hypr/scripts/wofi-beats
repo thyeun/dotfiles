@@ -1,0 +1,61 @@
+#!/bin/bash
+
+## Files
+CONFIG="$HOME/.config/hypr/wofi-beats/config"
+STYLE="$HOME/.config/hypr/wofi-beats/style.css"
+COLORS="$HOME/.config/hypr/wofi-beats/colors"
+
+## Wofi Command
+wofi_command="wofi --show dmenu \
+			--conf ${CONFIG} --style ${STYLE} --color ${COLORS} \
+			--width=350 --height=380 \
+			--cache-file=/dev/null \
+			--hide-scroll --no-actions \
+			--define=matching=fuzzy"
+
+
+notification(){
+  notify-send "Now Playing: Lofi Radio"
+}
+
+menu(){
+  printf "1. 蠱\n"
+  printf "2. 小尘\n"
+  printf "3. 給你給我\n"
+  printf "4. 小秘密\n"
+  printf "5. 多想在平庸的生活擁抱你"
+}
+
+main() {
+  choice=$(menu | ${wofi_command} | cut -d. -f1)
+
+  case $choice in
+    1)
+      notification 
+      mpv "/home/thyeun/Music/Chinese/蠱.mp3"
+      return
+      ;;
+    2)
+      notification
+      mpv "/home/thyeun/Music/Chinese/小尘 - 双笙.mp3"
+      return
+      ;;
+    3)
+      notification
+      mpv "/home/thyeun/Music/Chinese/毛不易 - 給你給我.mp3"
+      return
+      ;;
+    4)
+      notification
+      mpv "/home/thyeun/Music/Chinese/王笠人 - 小秘密.mp3"
+      return
+      ;;
+    5)
+      notification
+      mpv "/home/thyeun/Music/Chinese/隔壁老樊- 多想在平庸的生活擁抱你.mp3"
+      return
+      ;;            
+  esac
+}
+
+pkill -f mpv && notify-send "Lofi Radio stopped" || main

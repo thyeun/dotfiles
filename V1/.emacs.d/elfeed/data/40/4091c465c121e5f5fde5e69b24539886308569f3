@@ -1,0 +1,1 @@
+You don't always have to upgrade all the packages at once. With apt command, you can list the upgradable packages first and then decide which ones to upgrade.
