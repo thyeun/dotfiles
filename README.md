@@ -56,3 +56,4 @@ yay -S inotify-tools
 ### Thanks to 
 - @Aylur for the lovely EWW!
 - @closebox73 for the lovely Conky!
+
