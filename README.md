@@ -36,6 +36,11 @@ And below are the images for ```V2```.
 ## Emacs
 ![alt text](/images/8.png)
 
+## Neovim
+![alt text](/images/10.png)
+
+![alt text](/images/9.png)
+
 For V2 installation dependencies, e.g on Arch Linux
 ```
 yay -S hyprland-git eww-wayland conky-lua ttf-ubuntu-nerd socat jq acpi \
