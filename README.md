@@ -22,7 +22,7 @@ And below are the images for ```V2```.
 ![alt text](/images/2.png)
 
 ![alt text](/images/3.png)
-
+	
 ![alt text](/images/4.png)
 
 ![alt text](/images/5.png)
@@ -51,4 +51,3 @@ yay -S inotify-tools
 ### Thanks to 
 - @Aylur for the lovely EWW!
 - @closebox73 for the lovely Conky!
-
