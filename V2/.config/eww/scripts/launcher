@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function toggle_menu {
-    MAIN=""
+    MAIN=$(eww get main_monitor)
     hyprctl keyword blurls "remove,gtk-layer-shell"
     STATE=$(eww windows | grep $1$MAIN | awk '{print substr ($0, 0, 1)}')
     if [[ $STATE == '*' ]]; then 

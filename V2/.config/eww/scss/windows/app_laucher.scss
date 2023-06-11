@@ -10,7 +10,7 @@
         border-radius: $radii;
         background-image: url($wallpaper);
         background-size: cover;
-        background-position: right bottom;
+        background-position: center bottom;
         margin-bottom: 3em;
         .icon, .input{
             @include button;

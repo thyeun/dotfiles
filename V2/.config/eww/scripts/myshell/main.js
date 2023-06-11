@@ -6,7 +6,7 @@ import { Notifications } from './notifications.js'
 import { Apps } from './apps.js'
 import { GObject, Gio, GLib, Gtk } from './lib.js'
 
-const TICK_INTERVAL = 1000 //ms
+const TICK_INTERVAL = 100 //ms
 export const NOTIFICATIONS_BANNER_TIME_OUT = 5000
 export const PREFERRED_PLAYER = ''
 export const CACHE_PATH = GLib.get_user_cache_dir()+'/aylur/'
@@ -65,7 +65,7 @@ class App extends Gtk.Application{
 
         [ 
             'notifications', 'battery', 'network',
-            'bluetooth', 'apps', 'media'
+            'bluetooth', 'apps', 'media',
         ]
         .forEach(m => this._output(this[`_${m}`].json, m));
 
@@ -94,10 +94,9 @@ class App extends Gtk.Application{
         }
     
         if(this._eww) {
-            let [success, out, err, wait] = GLib.spawn_command_line_sync(
+            GLib.spawn_command_line_async(
                 `eww update ${name}=${JSON.stringify(JSON.stringify(json))}`
             );
-            if(!success) log(err);
         }
 
         if(this._stdout) {
